@@ -2,21 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using EpmPersonGenerator.DataAccess;
 
-namespace EpmPersonGenerator.Classes
+namespace RandomizedDataGenerator
 {
     /// <summary>
     /// Purpose: Class for generating test data
     /// Author: Justin Bellars
-    /// Note: Randomization data can either be pulled from a database (as seen below) or stored in arrays or lists (as also demonstrated below).
+    /// Note: Randomization data can either be pulled from a database or (as seen below) stored in arrays or lists.
     /// </summary>
     class DataGenerator
     {
-        public static readonly PersonGeneratorEntities db = new PersonGeneratorEntities();
         public static Dictionary<string, int> States;
 
         #region Constructor
@@ -24,11 +20,11 @@ namespace EpmPersonGenerator.Classes
         {
             
             // These are the states and US Territories that CB uses to populate the state drop-downs in the OLA
-            States = db.States.OrderBy(t => t.Id).ToDictionary(t => t.Abbreviation, t => t.Id);
+            States = 
             #region States Array
-            //{
-            //    {"AA",1},{"AE",2},{"AK",3},{"AL",4},{"AP",5},{"AR",6},{"AS",7},{"AZ",8},{"CA",9},{"CO",10},{"CT",11},{"DC",12},{"DE",13},{"FL",14},{"GA",15},{"GU",16},{"HI",17},{"IA",18},{"ID",19},{"IL",20},{"IN",21},{"KS",22},{"KY",23},{"LA",24},{"MA",25},{"MD",26},{"ME",27},{"MI",28},{"MN",29},{"MO",30},{"MP",31},{"MS",32},{"MT",33},{"NC",34},{"ND",35},{"NE",36},{"NH",37},{"NJ",38},{"NM",39},{"NV",40},{"NY",41},{"OH",42},{"OK",43},{"OR",44},{"PA",45},{"PR",46},{"RI",47},{"SC",48},{"SD",49},{"TN",50},{"TX",51},{"UT",52},{"VA",53},{"VI",54},{"VT",55},{"WA",56},{"WI",57},{"WV",58},{"WY",59}
-            //};
+            new Dictionary<string, int>(){
+                {"AA",1},{"AE",2},{"AK",3},{"AL",4},{"AP",5},{"AR",6},{"AS",7},{"AZ",8},{"CA",9},{"CO",10},{"CT",11},{"DC",12},{"DE",13},{"FL",14},{"GA",15},{"GU",16},{"HI",17},{"IA",18},{"ID",19},{"IL",20},{"IN",21},{"KS",22},{"KY",23},{"LA",24},{"MA",25},{"MD",26},{"ME",27},{"MI",28},{"MN",29},{"MO",30},{"MP",31},{"MS",32},{"MT",33},{"NC",34},{"ND",35},{"NE",36},{"NH",37},{"NJ",38},{"NM",39},{"NV",40},{"NY",41},{"OH",42},{"OK",43},{"OR",44},{"PA",45},{"PR",46},{"RI",47},{"SC",48},{"SD",49},{"TN",50},{"TX",51},{"UT",52},{"VA",53},{"VI",54},{"VT",55},{"WA",56},{"WI",57},{"WV",58},{"WY",59}
+            };
 
             #endregion States Array
         }
@@ -48,42 +44,48 @@ namespace EpmPersonGenerator.Classes
 
         #region Small Set of First Names
 
+        /// <summary>
+        /// Select one name from a pool of gender-agnostic first names.
+        /// </summary>
+        /// <returns></returns>
         public static string RandomizeFirstName()
         {
-            string[] fNames = db.Names.Select(fn => fn.Value).ToArray();
+            string[] genderAgnosticFirstNames = 
+
             #region First Names Array
 
-                //{
-                //    "Abihud", "Adrian", "Aelfred", "Aeowynn", "Agatha", "Ainsley", "Alejandro", "Alessandra", "Alfonso", "Alfredo", "Aloysius", "Amelia", "Anakin", "Anastasia", "Anders", "Andreas", "Annelisse", "Armando", "Athanasius", "Attila", "Augustine", 
-                //    "Balthazar", "Bartholomew", "Beltashazzar", "Bob", "Boris", "Bradford", "Breanna", "Bronson", "Bronwynn", "Bruce", "Bruton", 
-                //    "Caleb", "Caligula", "Calvin", "Cameron", "Candace", "Captain", "Carissa", "Celeste", "Charisse", "Charity", "Chastity", "Chartreuse", "Chauncey", "Chaz", "Chelsea", "Chesterfield", "Cheswick", "Chocolate", "Clementine", "Colby", "Colonel", "Constantine", "Cooter",
-                //    "Dakota", "David", "Demetrius", "Deon", "Desmond", "Django", "Dmitriy", "Dukes",
-                //    "Eaton", "Ebenezer", "Ekaterina", "Eliza", "Elvira", "Elvis", "Enrique", "Esau", "Esmerelda", "Esteban", "Eusebius", "Evegeniya", "Ezekiel", 
-                //    "Fabien", "Fabio", "Faisal", "Fatima", "Felix", "Festivus", "Festus", "Floyd", "Fortunatus", "Franz-Josef", 
-                //    "Galileo", "Gamaliel", "Gamaliel", "Garett", "Gaspar", "Gaston", "Georgette", "Gertrude", "Ghee", "Gilgamesh", "Gisela", "Goldie", "Goose", "Greedo", "Greta", "Grimace", "Griselda", "Guadelupe", "Gustavo", "Günther", 
-                //    "Habakkuk", "Hadassah", "Hades", "Haggai", "Hananiah", "Hezekiah", "Hilkiah", "Hiram", "Horatio", "Hosanna", 
-                //    "Iago", "Ian", "Ichabod", "Ignatius", "Iliana", "Indiana", "Indira", "Inga", "Ingrid", "Isabeau", "Isabella", "Ishmael", "Isolde", "Ivanna", 
-                //    "Jack", "Jade", "Jael", "Jagdeesh", "Jamal", "Jamison", "Janelle", "Jarvis", "Jasmine", "Jasper", "Jaspreet", "Javier", "Jazz", "Jean-Luc", "Jean-Paul", "Jedediah", "Jefferson", "Jehoshaphat", "Jehu", "Jeremiah", "Jermaine", "Jesse", "Jezebel", "Jillian", "Joab", "Jocelyn", "Joelle", "Johann", "Joshua", "Joy", "Joyel", "Juan Pablo", "Julianna", "Juliette", "Julius", "June", "Jupiter", "Jürgen", "Justimus", "Justo", "Justus", 
-                //    "Kakashi", "Kalel", "Karthika", "Kassandra", "Katelyn", "Katja", "Katya", "Kayla", "Kelly", "Kendall", "Kennedy", "Keturah", "Kiera", 
-                //    "Lando", "Landon", "Laralee", "Lateesha", "Lavender", "Leia", "Leonidas", "Liliana", "Lincoln", "Ljubljana", "Lucinda", "Lucretia", "Ludmilla", "Ludwig", "Luke", "Lukasz",
-                //    "Mabeline", "Maeve", "Maher-shalal-hash-baz", "Majed", "Manfred", "Mansour", "Marcel", "Margaret", "Matthias", "Maverick", "Mei-li", "Melikalikimaka", "Merriwether", "Methuselah", "Minerva", "Miriam", "Miroslav",
-                //    "Naamah", "Nadab", "Nahaliel", "Nahath", "Nahum", "Natalie", "Natasha", "Nathaniel", "Naveen", "Nebuchadnezzar", "Nebuzaradan", "Nehemiah", "Nicodemas", "Nikolina", "Noah", "Noelle", 
-                //    "Obadiah", "Obed", "Onesimus", "Ophrah", "Orlando", "Ottavia", "Ovaltine", 
-                //    "Paddy", "Padme", "Paola", "Paolo", "Pascal", "Patsy", "Patty", "Patty", "Paulina", "Pavel", "Payson", "Penelope", "Penny", "Pete", "Porsha", "Preethi", "Preston", "Prisca", "Priscilla", 
-                //    "Quentin", "Quincy", "Quirinius",
-                //    "Raja", "Rajiv", "Randall", "Randy", "Raphael", "Rapunzel", "Raul", "Raymond", "Reba", "Rebekah", "Reginald", "Renata", "Rex", "Rhet", "Richard", "Rigo", "Ringo", "Romeo", "Ronaldo", "Rosalind", "Rosemary", "Rufus", "Rumpelstiltskin", "Rusty", 
-                //    "Sabine", "Sabrina", "Sadie", "Salazar", "Sallyann", "Samantha", "Santina", "Santonio", "Sergeant", "Saruman", "Selena", "Seth", "Shamus", "Shane", "Sherlock",  "Sheva", "Sid", "Sidney", "Sisyphus", "Sonny", "Spidey", "Srinivas", "Stavros", "Stratton", "Stuart", "Suzie", "Sven", 
-                //    "Tangus", "Tanner", "Tanya", "Terrance", "Thaddeus", "Thatcher", "Theophilus", "Therousia", "Thomas", "Thor", "Trapezius", "Trevor", "Tsipi", "Tsiporah", "Tristan", "Trudy", 
-                //    "Uriah", "Ursula", "Uzziah", "Uzziel",
-                //    "Valenzuela", "Valkyrie", "Vashti", "Vitaliy", "Vito", "Vladimir", 
-                //    "Wellington", "Winston", "Wyndham", 
-                //    "Xavier", "Xerxes", "Xian", 
-                //    "Yakob", "Yaroslav", "Yasmine", "Yochanan", "Yohanan", "Yosef", "Yu", 
-                //    "Zacchaeus", "Zaccheus", "Zachary", "Zander", "Zarathustra", "Zarephath", "Zebadiah", "Zechariah", "Zedekiah", "Zephaniah", "Zerubbabel", "Zhao", "Ziklag", "Zimri", "Zipporah", "Zoe", "Zophar", "Zsa Zsa"
-                //};
+                {
+                    "Abihud", "Adrian", "Aelfred", "Aeowynn", "Agatha", "Ainsley", "Alejandro", "Alessandra", "Alfonso", "Alfredo", "Aloysius", "Amelia", "Anakin", "Anastasia", "Anders", "Andreas", "Annelisse", "Armando", "Athanasius", "Attila", "Augustine", 
+                    "Balthazar", "Bartholomew", "Beltashazzar", "Bob", "Boris", "Bradford", "Breanna", "Bronson", "Bronwynn", "Bruce", "Bruton", 
+                    "Caleb", "Caligula", "Calvin", "Cameron", "Candace", "Captain", "Carissa", "Celeste", "Charisse", "Charity", "Chastity", "Chartreuse", "Chauncey", "Chaz", "Chelsea", "Chesterfield", "Cheswick", "Chocolate", "Clementine", "Colby", "Colonel", "Constantine", "Cooter",
+                    "Dakota", "David", "Demetrius", "Deon", "Desmond", "Django", "Dmitriy", "Dukes",
+                    "Eaton", "Ebenezer", "Ekaterina", "Eliza", "Elvira", "Elvis", "Enrique", "Esau", "Esmerelda", "Esteban", "Eusebius", "Evegeniya", "Ezekiel", 
+                    "Fabien", "Fabio", "Faisal", "Fatima", "Felix", "Festivus", "Festus", "Floyd", "Fortunatus", "Franz-Josef", 
+                    "Galileo", "Gamaliel", "Gamaliel", "Garett", "Gaspar", "Gaston", "Georgette", "Gertrude", "Ghee", "Gilgamesh", "Gisela", "Goldie", "Goose", "Greedo", "Greta", "Grimace", "Griselda", "Guadelupe", "Gustavo", "Günther", 
+                    "Habakkuk", "Hadassah", "Hades", "Haggai", "Hananiah", "Hezekiah", "Hilkiah", "Hiram", "Horatio", "Hosanna", 
+                    "Iago", "Ian", "Ichabod", "Ignatius", "Iliana", "Indiana", "Indira", "Inga", "Ingrid", "Isabeau", "Isabella", "Ishmael", "Isolde", "Ivanna", 
+                    "Jack", "Jade", "Jael", "Jagdeesh", "Jamal", "Jamison", "Janelle", "Jarvis", "Jasmine", "Jasper", "Jaspreet", "Javier", "Jazz", "Jean-Luc", "Jean-Paul", "Jedediah", "Jefferson", "Jehoshaphat", "Jehu", "Jeremiah", "Jermaine", "Jesse", "Jezebel", "Jillian", "Joab", "Jocelyn", "Joelle", "Johann", "Joshua", "Joy", "Joyel", "Juan Pablo", "Julianna", "Juliette", "Julius", "June", "Jupiter", "Jürgen", "Justimus", "Justo", "Justus", 
+                    "Kakashi", "Kalel", "Karthika", "Kassandra", "Katelyn", "Katja", "Katya", "Kayla", "Kelly", "Kendall", "Kennedy", "Keturah", "Kiera", 
+                    "Lando", "Landon", "Laralee", "Lateesha", "Lavender", "Leia", "Leonidas", "Liliana", "Lincoln", "Ljubljana", "Lucinda", "Lucretia", "Ludmilla", "Ludwig", "Luke", "Lukasz",
+                    "Mabeline", "Maeve", "Maher-shalal-hash-baz", "Majed", "Manfred", "Mansour", "Marcel", "Margaret", "Matthias", "Maverick", "Mei-li", "Melikalikimaka", "Merriwether", "Methuselah", "Minerva", "Miriam", "Miroslav",
+                    "Naamah", "Nadab", "Nahaliel", "Nahath", "Nahum", "Natalie", "Natasha", "Nathaniel", "Naveen", "Nebuchadnezzar", "Nebuzaradan", "Nehemiah", "Nicodemas", "Nikolina", "Noah", "Noelle", 
+                    "Obadiah", "Obed", "Onesimus", "Ophrah", "Orlando", "Ottavia", "Ovaltine", 
+                    "Paddy", "Padme", "Paola", "Paolo", "Pascal", "Patsy", "Patty", "Patty", "Paulina", "Pavel", "Payson", "Penelope", "Penny", "Pete", "Porsha", "Preethi", "Preston", "Prisca", "Priscilla", 
+                    "Quentin", "Quincy", "Quirinius",
+                    "Raja", "Rajiv", "Randall", "Randy", "Raphael", "Rapunzel", "Raul", "Raymond", "Reba", "Rebekah", "Reginald", "Renata", "Rex", "Rhet", "Richard", "Rigo", "Ringo", "Romeo", "Ronaldo", "Rosalind", "Rosemary", "Rufus", "Rumpelstiltskin", "Rusty", 
+                    "Sabine", "Sabrina", "Sadie", "Salazar", "Sallyann", "Samantha", "Santina", "Santonio", "Sergeant", "Saruman", "Selena", "Seth", "Shamus", "Shane", "Sherlock",  "Sheva", "Sid", "Sidney", "Sisyphus", "Sonny", "Spidey", "Srinivas", "Stavros", "Stratton", "Stuart", "Suzie", "Sven", 
+                    "Tangus", "Tanner", "Tanya", "Terrance", "Thaddeus", "Thatcher", "Theophilus", "Therousia", "Thomas", "Thor", "Trapezius", "Trevor", "Tsipi", "Tsiporah", "Tristan", "Trudy", 
+                    "Uriah", "Ursula", "Uzziah", "Uzziel",
+                    "Valenzuela", "Valkyrie", "Vashti", "Vitaliy", "Vito", "Vladimir", 
+                    "Wellington", "Winston", "Wyndham", 
+                    "Xavier", "Xerxes", "Xian", 
+                    "Yakob", "Yaroslav", "Yasmine", "Yochanan", "Yohanan", "Yosef", "Yu", 
+                    "Zacchaeus", "Zaccheus", "Zachary", "Zander", "Zarathustra", "Zarephath", "Zebadiah", "Zechariah", "Zedekiah", "Zephaniah", "Zerubbabel", "Zhao", "Ziklag", "Zimri", "Zipporah", "Zoe", "Zophar", "Zsa Zsa"
+                };
+
             #endregion First Names Array
 
-            return RandomSelect(fNames);
+            return RandomSelect(genderAgnosticFirstNames);
         }
 
         #endregion Small Set of First Names
@@ -94,197 +96,196 @@ namespace EpmPersonGenerator.Classes
         {
 
             string[] femaleNames =
-                db.Names.Where(fn => fn.Gender == CommonStrings.gFemale).Select(fn => fn.Value).ToArray();
-
+                
                 #region Female Names Array
-                //{
-                //    "Aaliyah", "Aarushi", "Abbey", "Abbi", "Abbie", "Abby", "Abi", "Abia", "Abigail", "Aby", "Acacia",
-                //    "Ada", "Adalia", "Adalyn", "Addie", "Addison", "Adelaide", "Adele", "Adelia", "Adelina", "Adeline",
-                //    "Adreanna", "Adriana", "Adrianna", "Adrianne", "Adrienne", "Aeowynn", "Aerona", "Agatha", "Aggie",
-                //    "Agnes", "Aida", "Aileen", "Aimee", "Aine", "Ainsleigh", "Ainsley", "Aisha", "Aisling", "Alaina",
-                //    "Alana", "Alanis", "Alanna", "Alannah", "Alayah", "Alayna", "Alba", "Aleah", "Alecia", "Aleisha",
-                //    "Alejandra", "Alena", "Alessandra", "Alessia", "Alex", "Alexa", "Alexandra", "Alexandria", "Alexia",
-                //    "Alexis", "Alexus", "Ali", "Alia", "Alice", "Alicia", "Alina", "Alisa", "Alisha", "Alison", "Alissa", 
-                //    "Alivia", "Aliyah", "Alize", "Alka", "Allie", "Allison", "Ally", "Allyson", "Alma", "Alondra",
-                //    "Alycia", "Alyshialynn", "Alyson", "Alyssa", "Alyssia", "Amalia", "Amanda", "Amani", "Amara",
-                //    "Amari", "Amaris", "Amaya", "Amber", "Amelia", "Amelie", "America", "Amethyst", "Amie", "Amina",
-                //    "Amirah", "Amy", "Amya", "Ana", "Anabel", "Anabelle", "Anahi", "Anais", "Anamaria", "Ananya",
-                //    "Anastasia", "Andie", "Andrea", "Andromeda", "Angel", "Angela", "Angelia", "Angelica", "Angelina",
-                //    "Angeline", "Angelique", "Angie", "Anika", "Anisa", "Anita", "Aniya", "Aniyah", "Anjali", "Ann",
-                //    "Anna", "Annabel", "Annabella", "Annabelle", "Annabeth", "Annalisa", "Annalise", "Anne", "Anneke",
-                //    "Annelisse", "Annemarie", "Annette", "Annie", "Annika", "Annmarie", "Anselma", "Anthea",
-                //    "Antoinette", "Antonia", "Anuja", "Anusha", "Anya", "Aoibhe", "Aoibheann", "Aoife", "Aphrodite",
-                //    "Apple", "April", "Aqua", "Arabella", "Aria", "Ariadne", "Ariana", "Arianna", "Arianne", "Ariel",
-                //    "Ariella", "Arielle", "Arisha", "Arleen", "Arlene", "Artemis", "Arwen", "Arya", "Asha", "Ashanti",
-                //    "Ashlee", "Ashleigh", "Ashley", "Ashlie", "Ashlyn", "Ashlynn", "Ashton", "Ashvini", "Asia", "Asma",
-                //    "Aspen", "Astrid", "Athena", "Aubree", "Aubrey", "Audra", "Audrey", "Audrina", "Augustina",
-                //    "Aurelia", "Aurora", "Autumn", "Ava", "Avalon", "Avery", "Avril", "Aya", "Ayana", "Ayanna", "Ayesha", 
-                //    "Ayisha", "Ayla", "Azalea", "Azaria", "Azariah", "Bailey", "Barbara", "Barbie", "Baylee", "Bea",
-                //    "Beatrice", "Beatrix", "Becca", "Beccy", "Becky", "Belinda", "Bella", "Bellatrix", "Belle", "Benita", 
-                //    "Benthe", "Bernadette", "Bernice", "Bertha", "Beryl", "Bess", "Beth", "Bethan", "Bethanie",
-                //    "Bethany", "Betsy", "Bettina", "Betty", "Beverly", "Beyonce", "Bhu", "Bianca", "Billie", "Blair",
-                //    "Blaire", "Blake", "Blanche", "Bliss", "Bloom", "Blossom", "Blythe", "Bobbi", "Bobbie", "Bonita",
-                //    "Bonnie", "Braelyn", "Brandi", "Brandy", "Braylee", "Brea", "Breanna", "Bree", "Breeze", "Brenda",
-                //    "Brenna", "Bria", "Briana", "Brianna", "Brianne", "Briar", "Bridget", "Bridgette", "Bridie",
-                //    "Briella", "Brielle", "Briley", "Brinley", "Briony", "Brisa", "Britney", "Britt", "Brittany",
-                //    "Brittney", "Brogan", "Bronte", "Bronwen", "Bronwyn", "Bronwynn", "Brooke", "Brooklyn", "Brooklynn",
-                //    "Bryanna", "Brylee", "Bryn", "Brynlee", "Brynn", "Bryony", "Bunty", "Cadence", "Cailin", "Caitlan",
-                //    "Caitlin", "Caitlyn", "Caleigh", "Cali", "Callie", "Calliope", "Callista", "Calypso", "Cameron",
-                //    "Cami", "Camila", "Camilla", "Camille", "Camryn", "Candace", "Candice", "Candy", "Caoimhe",
-                //    "Caprice", "Cara", "Carina", "Caris", "Carissa", "Carla", "Carley", "Carlie", "Carly", "Carlynn",
-                //    "Carmel", "Carmela", "Carmen", "Carol", "Carole", "Carolina", "Caroline", "Carolyn", "Carrie",
-                //    "Carter", "Carys", "Casey", "Cassandra", "Cassia", "Cassidy", "Cassie", "Cat", "Cate", "Caterina",
-                //    "Cathalina", "Catherine", "Cathleen", "Cathy", "Catlin", "Catrina", "Catriona", "Caye", "Cayla", "Cece",
-                //    "Cecelia", "Cecilia", "Cecily", "Celeste", "Celestia", "Celestine", "Celia", "Celina", "Celine",
-                //    "Cerys", "Chanel", "Chanelle", "Chantal", "Chantelle", "Charis", "Charissa", "Charisse", "Charity",
-                //    "Charlene", "Charley", "Charlie", "Charlize", "Charlotte", "Charmaine", "Chastity", "Chelsea",
-                //    "Chelsey", "Chenille", "Cher", "Cheri", "Cherie", "Cherry", "Cheryl", "Cheyanne", "Cheyenne",
-                //    "Chiara", "Chloe", "Chris", "Chrissy", "Christa", "Christabel", "Christal", "Christen", "Christi",
-                //    "Christiana", "Christie", "Christina", "Christine", "Christy", "Chrystal", "Ciara", "Cici", "Ciel",
-                //    "Cierra", "Cindy", "Claire", "Clara", "Clarabelle", "Clare", "Clarice", "Clarissa", "Clarisse",
-                //    "Clary", "Claudette", "Claudia", "Claudine", "Clea", "Clementine", "Cleo", "Clodagh", "Clover",
-                //    "Coco", "Colette", "Colleen", "Connie", "Constance", "Cora", "Coral", "Coralie", "Coraline",
-                //    "Cordelia", "Cori", "Corina", "Corinne", "Corra", "Cosette", "Courtney", "Cristina", "Crystal",
-                //    "Cynthia", "Dagmar", "Dahlia", "Daisy", "Dakota", "Dana", "Danette", "Dani", "Danica", "Daniela",
-                //    "Daniella", "Danielle", "Danika", "Daphne", "Dara", "Darcey", "Darcie", "Darcy", "Daria", "Darla",
-                //    "Darlene", "Dashee", "Davida", "Davina", "Dawn", "Dayna", "Daysha", "Deana", "Deann", "Deanna",
-                //    "Deanne", "Debbie", "Debora", "Deborah", "Debra", "Dee", "Deedee", "Deena", "Deidre", "Deirdre",
-                //    "Deja", "Delaney", "Delanie", "Delia", "Delilah", "Della", "Delores", "Delphine", "Demetria", "Demi", 
-                //    "Dena", "Denise", "Denny", "Desiree", "Destinee", "Destiny", "Diamond", "Diana", "Diane", "Dianna", 
-                //    "Dianne", "Dido", "Dina", "Dionne", "Dior", "Dixie", "Dolly", "Dolores", "Dominique", "Donna",
-                //    "Dora", "Doreen", "Doris", "Dorothy", "Dot", "Drew", "Dulce", "Eabha", "Ebony", "Echo", "Eden",
-                //    "Edie", "Edith", "Edna", "Edwina", "Effie", "Eileen", "Eilidh", "Eimear", "Ekaterina", "Elaina",
-                //    "Elaine", "Elana", "Eleanor", "Electra", "Elektra", "Elena", "Eliana", "Elin", "Elina", "Elisa",
-                //    "Eliza", "Elisabeth", "Elise", "Eliza", "Elizabeth", "Ella", "Elle", "Ellen", "Ellery", "Ellie",
-                //    "Ellis", "Elly", "Elodie", "Eloise", "Elora", "Elsa", "Elsie", "Elspeth", "Elvira", "Elysia",
-                //    "Elyza", "Emanuela", "Ember", "Emely", "Emer", "Emerald", "Emerson", "Emilee", "Emilia", "Emilie",
-                //    "Emily", "Emma", "Emmaline", "Emmalyn", "Emmanuelle", "Emmeline", "Emmie", "Emmy", "Enya", "Erica",
-                //    "Erika", "Erin", "Eris", "Erzsébet", "Eryn", "Esmay", "Esme", "Esmeralda", "Esmerelda", "Esperanza",
-                //    "Estee", "Estelle", "Ester", "Esther", "Estrella", "Ethel", "Eugenie", "Eunice", "Eva", "Evangeline", 
-                //    "Eve", "Evegeniya", "Evelin", "Evelyn", "Everly", "Evie", "Evita", "Fabrizia", "Faith", "Fallon",
-                //    "Fanny", "Farah", "Farrah", "Fatima", "Fawn", "Fay", "Faye", "Felicia", "Felicity", "Fern",
-                //    "Fernanda", "Ffion", "Fifi", "Fiona", "Fleur", "Flor", "Flora", "Florence", "Fran", "Frances",
-                //    "Francesca", "Francine", "Frankie", "Freda", "Freya", "Frida", "Gabby", "Gabriela", "Gabriella",
-                //    "Gabrielle", "Gail", "Galadriel", "Gayle", "Gaynor", "Geena", "Gemma", "Gena", "Genesis",
-                //    "Genevieve", "Georgette", "Georgia", "Georgie", "Georgina", "Geraldine", "Gertrude", "Gia", "Gianna", 
-                //    "Gigi", "Gillian", "Gina", "Ginger", "Ginny", "Giovanna", "Gisela", "Giselle", "Gisselle",
-                //    "Gladys", "Glenda", "Gloria", "Goldie", "Grace", "Gracelyn", "Gracie", "Grainne", "Greta",
-                //    "Gretchen", "Griselda", "Guadalupe", "Guadelupe", "Guinevere", "Gwen", "Gwendolyn", "Gwyneth",
-                //    "Habiba", "Hadassah", "Hadley", "Hailee", "Hailey", "Haleigh", "Haley", "Halle", "Hallie", "Hanna",
-                //    "Hannah", "Harley", "Harmony", "Harper", "Harriet", "Hattie", "Hayden", "Haylee", "Hayley", "Hazel",
-                //    "Hazeline", "Heather", "Heaven", "Heidi", "Helen", "Helena", "Helga", "Helina", "Henrietta",
-                //    "Hepsiba", "Hera", "Hermione", "Hester", "Hetty", "Hilary", "Hilda", "Hollie", "Holly", "Honesty",
-                //    "Honey", "Honor", "Honour", "Hope", "Hosanna", "Hyacinth", "Ianthe", "Ida", "Ila", "Ilene", "Iliana", 
-                //    "Ilona", "Ilse", "Imani", "Imelda", "Imogen", "India", "Indie", "Indigo", "Indira", "Ines", "Inga", 
-                //    "Ingrid", "Iona", "Ira", "Irene", "Iris", "Irma", "Isa", "Isabeau", "Isabel", "Isabella",
-                //    "Isabelle", "Isha", "Isis", "Isla", "Isobel", "Isolde", "Itzel", "Ivana", "Ivanna", "Ivy", "Iyanna",
-                //    "Izabella", "Izidora", "Izzy", "Jacinda", "Jacinta", "Jackie", "Jacqueline", "Jacquelyn", "Jada",
-                //    "Jade", "Jaden", "Jadyn", "Jael", "Jaelynn", "Jaida", "Jaime", "Jamie", "Jamiya", "Jan", "Jana",
-                //    "Janae", "Jancis", "Jane", "Janelle", "Janessa", "Janet", "Janette", "Janice", "Janie", "Janine",
-                //    "Janis", "Janiya", "January", "Jaqueline", "Jasmin", "Jasmine", "Jaya", "Jayda", "Jayden", "Jayla",
-                //    "Jaylinn", "Jaylynn", "Jayne", "Jazlyn", "Jazmin", "Jazmine", "Jean", "Jeanette", "Jeanine",
-                //    "Jeanne", "Jeannette", "Jeannie", "Jeannine", "Jemima", "Jemma", "Jen", "Jena", "Jenae", "Jenessa", "Jenna",
-                //    "Jenni", "Jennie", "Jennifer", "Jenny", "Jensen", "Jeri", "Jerri", "Jess", "Jessa", "Jesse",
-                //    "Jessica", "Jessie", "Jet", "Jewel", "Jezebel", "Jill", "Jillian", "Jo", "Joan", "Joann", "Joanna",
-                //    "Joanne", "Jocelyn", "Jodi", "Jodie", "Jody", "Joelle", "Johanna", "Joleen", "Jolene", "Jolie",
-                //    "Joni", "Jordan", "Jordana", "Jordyn", "Jorja", "Joselyn", "Josephine", "Josie", "Joy", "Joyce",
-                //    "Joyel", "Juanita", "Judith", "Judy", "Jules", "Julia", "Juliana", "Julianna", "Julianne", "Julie",
-                //    "Juliet", "Juliette", "Julissa", "July", "June", "Juno", "Justice", "Justina", "Justine", "Kacey",
-                //    "Kaidence", "Kailey", "Kailyn", "Kaitlin", "Kaitlyn", "Kaitlynn", "Kalea", "Kaleigh", "Kali",
-                //    "Kalia", "Kamala", "Kamryn", "Kara", "Karen", "Kari", "Karin", "Karina", "Karissa", "Karla",
-                //    "Karlee", "Karly", "Karolina", "Karyn", "Kasey", "Kassandra", "Kassidy", "Kassie", "Kat", "Katara",
-                //    "Katarina", "Kate", "Katelyn", "Katelynn", "Katerina", "Katharine", "Katherine", "Kathleen",
-                //    "Kathryn", "Kathy", "Katia", "Katie", "Katja", "Katlyn", "Katrina", "Katy", "Katya", "Kay", "Kaya",
-                //    "Kaye", "Kayla", "Kaylee", "Kayleigh", "Kayley", "Kaylie", "Kaylin", "Keara", "Keeley", "Keely",
-                //    "Keira", "Keisha", "Kelis", "Kelley", "Kelli", "Kellie", "Kelly", "Kelsey", "Kelsie", "Kendall",
-                //    "Kendra", "Kennedy", "Kenzie", "Keri", "Kerian", "Kerri", "Kerry", "Keturah", "Kia", "Kiana",
-                //    "Kiara", "Kiera", "Kierra", "Kiersten", "Kiki", "Kiley", "Kim", "Kimberlee", "Kimberley", "Kimberly", 
-                //    "Kimbriella", "Kimmy", "Kinley", "Kinsey", "Kinsley", "Kira", "Kirsten", "Kirstin", "Kirsty",
-                //    "Kiswa", "Kitty", "Kizzy", "Kloe", "Kora", "Kori", "Kourtney", "Kris", "Krista", "Kristen", "Kristi", 
-                //    "Kristie", "Kristin", "Kristina", "Kristine", "Kristy", "Krystal", "Kyla", "Kylee", "Kyleigh",
-                //    "Kylie", "Kyra", "Lacey", "Lacie", "Lacy", "Ladonna", "Laila", "Lakyn", "Lala", "Lana", "Laney",
-                //    "Lani", "Lara", "Laralee", "Larissa", "Lateesha", "Latoya", "Laura", "Laurel", "Lauren", "Lauri",
-                //    "Laurie", "Lauryn", "Lavana", "Lavender", "Lavinia", "Layla", "Lea", "Leah", "Leandra", "Leann",
-                //    "Leanna", "Leanne", "Lee", "Leela", "Leena", "Leia", "Leigh", "Leila", "Leilani", "Lela", "Lena",
-                //    "Lenore", "Leona", "Leonie", "Leora", "Lesa", "Lesley", "Leslie", "Lesly", "Leticia", "Lettie",
-                //    "Lexi", "Lexia", "Lexie", "Lexis", "Lia", "Liana", "Lianne", "Libby", "Liberty", "Lidia", "Lila",
-                //    "Lilac", "Lilah", "Lilian", "Liliana", "Lilita", "Lilith", "Lillian", "Lillie", "Lilly", "Lily",
-                //    "Lina", "Linda", "Lindsay", "Lindsey", "Lindy", "Lisa", "Lisette", "Liv", "Livia", "Livvy", "Liz",
-                //    "Liza", "Lizbeth", "Lizette", "Lizzie", "Lizzy", "Ljubliana", "Ljubljana", "Logan", "Lois", "Lola",
-                //    "Lolita", "London", "Lora", "Loran", "Lorelei", "Loren", "Lorena", "Loretta", "Lori", "Lorie",
-                //    "Lorna", "Lorraine", "Lorri", "Lorrie", "Lottie", "Lotus", "Louisa", "Louise", "Luann", "Lucia",
-                //    "Luciana", "Lucie", "Lucille", "Lucinda", "Lucky", "Lucretia", "Lucy", "Ludmilla", "Luisa", "Lulu",
-                //    "Luna", "Lupita", "Lydia", "Lyla", "Lyna", "Lynda", "Lyndsey", "Lynette", "Lynn", "Lynne",
-                //    "Lynnette", "Lynsey", "Lyra", "Lyric", "Mabel", "Mabeline", "Macey", "Macie", "Mackenzie", "Macy",
-                //    "Mada", "Madalyn", "Maddie", "Maddison", "Maddy", "Madeleine", "Madeline", "Madelyn", "Madison",
-                //    "Madisyn", "Madyson", "Mae", "Maeve", "Magda", "Magdalena", "Magdalene", "Maggie", "Maia", "Maire",
-                //    "Mairead", "Maisie", "Maisy", "Maja", "Makayla", "Makenna", "Makenzie", "Malia", "Malinda",
-                //    "Mallory", "Malory", "Mandy", "Manuela", "Mara", "Marcela", "Marcella", "Marci", "Marcia", "Marcy",
-                //    "Margaret", "Margarita", "Margie", "Margo", "Margot", "Margret", "Maria", "Mariah", "Mariam",
-                //    "Marian", "Mariana", "Marianna", "Marianne", "Maribel", "Marie", "Mariela", "Marilyn", "Marina",
-                //    "Marion", "Marisa", "Marisol", "Marissa", "Maritza", "Marjorie", "Marla", "Marlee", "Marlene",
-                //    "Marley", "Marnie", "Marsha", "Martha", "Martina", "Mary", "Maryam", "Maryann", "Marybeth",
-                //    "Matilda", "Maude", "Maura", "Maureen", "Mavis", "Maxine", "May", "Maya", "Mayra", "Mckayla",
-                //    "Mckenna", "Mckenzie", "Mea", "Meadow", "Meagan", "Meera", "Meg", "Megan", "Meghan", "Mei", "Mei-li", 
-                //    "Mel", "Melanie", "Melikalikimaka", "Melina", "Melinda", "Melissa", "Melody", "Mercedes", "Mercy",
-                //    "Meredith", "Merida", "Meryl", "Mia", "Michaela", "Michele", "Michelle", "Mika", "Mikaela",
-                //    "Mikayla", "Mikhaela", "Mila", "Mildred", "Milena", "Miley", "Millicent", "Millie", "Milly", "Mimi",
-                //    "Mina", "Mindy", "Minerva", "Minnie", "Mira", "Miranda", "Miriam", "Mirjam", "Misty", "Mitzi",
-                //    "Moira", "Mollie", "Molly", "Mona", "Monica", "Monika", "Monique", "Montana", "Morgan", "Morgana",
-                //    "Moya", "Murderess", "Muriel", "Mya", "Myfanwy", "Myla", "Myra", "Myrna", "Naama", "Nadene", "Nadia", 
-                //    "Nadine", "Nahaliel", "Naja", "Nala", "Nancy", "Nanette", "Naomi", "Natalia", "Natalie",
-                //    "Natascha", "Natasha", "Natisha", "Naya", "Nayeli", "Nell", "Nellie", "Nelly", "Nena", "Nerissa",
-                //    "Nessa", "Nevaeh", "Neve", "Nia", "Niamh", "Nichola", "Nichole", "Nicki", "Nicky", "Nicola",
-                //    "Nicole", "Nicolette", "Nicolina", "Nieve", "Niki", "Nikita", "Nikki", "Nikolina", "Nila", "Nina",
-                //    "Nishka", "Noelle", "Nola", "Nora", "Noreen", "Norma", "Nova", "Oasis", "Ocean", "Octavia", "Odalis", 
-                //    "Odele", "Odelia", "Odette", "Ofra", "Olga", "Olive", "Olivia", "Oonagh", "Opal", "Ophelia",
-                //    "Ophra", "Orianna", "Orla", "Orlaith", "Ottavia", "Padme", "Page", "Paige", "Paisley", "Paloma",
-                //    "Pam", "Pamela", "Pandora", "Pansy", "Paola", "Paris", "Patience", "Patrice", "Patricia", "Patsy",
-                //    "Patti", "Patty", "Paula", "Paulette", "Paulina", "Pauline", "Payton", "Pearl", "Peggy", "Penelope",
-                //    "Penny", "Perla", "Perrie", "Persephone", "Petra", "Petunia", "Peyton", "Phillipa", "Philomena",
-                //    "Phoebe", "Phoenix", "Phyllis", "Piper", "Pippa", "Pixie", "Polly", "Poppy", "Porsche", "Porsha",
-                //    "Portia", "Precious", "Preethi", "Presley", "Preslie", "Primrose", "Princess", "Prisca", "Priscilla", 
-                //    "Priya", "Promise", "Prudence", "Prue", "Queenie", "Quiana", "Quinn", "Rabia", "Rachael", "Rachel", 
-                //    "Rachelle", "Rae", "Raegan", "Raelyn", "Raina", "Raine", "Ramona", "Ramsha", "Randi", "Rani",
-                //    "Rania", "Rapunzel", "Raquel", "Raven", "Raya", "Rayna", "Rayne", "Reagan", "Reanna", "Reanne",
-                //    "Reba", "Rebecca", "Rebekah", "Reese", "Regan", "Regina", "Reilly", "Reina", "Remi", "Rena",
-                //    "Renata", "Renate", "Rene", "Renee", "Renesmee", "Reyna", "Rhea", "Rhian", "Rhianna", "Rhiannon",
-                //    "Rhoda", "Rhona", "Rhonda", "Ria", "Rianna", "Ricki", "Rihanna", "Rikki", "Riley", "Rita", "River",
-                //    "Roanne", "Roberta", "Robin", "Robyn", "Rochelle", "Rocio", "Roisin", "Rolanda", "Ronda", "Roni",
-                //    "Rosa", "Rosalie", "Rosalind", "Rosalynn", "Rosanna", "Rose", "Rosella", "Rosemarie", "Rosemary",
-                //    "Rosetta", "Rosie", "Rosy", "Rowan", "Rowena", "Roxanne", "Roxie", "Roxy", "Rozlynn", "Ruby", "Rue",
-                //    "Rusty", "Ruth", "Rydel", "Rylee", "Ryleigh", "Rylie", "Sabina", "Sabine", "Sabrina", "Sade",
-                //    "Sadhbh", "Sadie", "Saffron", "Saffronia", "Safire", "Safiya", "Sage", "Sahara", "Saige", "Saira",
-                //    "Sally", "Sallyann", "Salma", "Salome", "Sam", "Samantha", "Samara", "Samia", "Samira", "Sammie",
-                //    "Sammy", "Sandra", "Sandy", "Santina", "Saoirse", "Sapphire", "Sara", "Sarah", "Sarina", "Sariya",
-                //    "Sascha", "Sasha", "Saskia", "Savanna", "Savannah", "Scarlet", "Scarlett", "Sebastianne", "Selah",
-                //    "Selena", "Selina", "Selma", "Senuri", "Seren", "Serena", "Serenity", "Shakira", "Shana", "Shania",
-                //    "Shanice", "Shannon", "Shari", "Sharon", "Shauna", "Shawn", "Shawna", "Shawnette", "Shayla", "Shea",
-                //    "Sheena", "Sheila", "Shelby", "Shelia", "Shelley", "Shelly", "Sheri", "Sheridan", "Sherri",
-                //    "Sherrie", "Sherry", "Sheryl", "Sheva", "Shirley", "Shona", "Shreya", "Shyla", "Sian", "Sidney",
-                //    "Sienna", "Sierra", "Silvia", "Simone", "Simran", "Sinead", "Siobhan", "Sky", "Skye", "Skylar",
-                //    "Skyler", "Sloane", "Sofia", "Sofie", "Solange", "Sondra", "Sonia", "Sonja", "Sonya", "Sophia",
-                //    "Sophie", "Sophy", "Stacey", "Staci", "Stacie", "Stacy", "Star", "Starla", "Stefanie", "Stella",
-                //    "Steph", "Stephanie", "Sue", "Suki", "Summer", "Susan", "Susanna", "Susannah", "Susanne", "Susie",
-                //    "Sutton", "Suzanna", "Suzanne", "Suzette", "Suzie", "Suzy", "Sybil", "Sydney", "Sylvia", "Sylvie",
-                //    "Tabatha", "Tabitha", "Tahlia", "Tala", "Talia", "Taliyah", "Tallulah", "Tamara", "Tamera", "Tami",
-                //    "Tamia", "Tamika", "Tammi", "Tammie", "Tammy", "Tamra", "Tamsin", "Tania", "Tanisha", "Tanya",
-                //    "Tara", "Taryn", "Tasha", "Tatiana", "Tatum", "Tawana", "Taya", "Tayla", "Taylah", "Tayler",
-                //    "Taylor", "Teagan", "Teegan", "Tegan", "Tenille", "Teresa", "Teri", "Terri", "Terrie", "Terry",
-                //    "Tess", "Tessa", "Thalia", "Thea", "Thelma", "Theodora", "Theophilia", "Theresa", "Therese",
-                //    "Therousia", "Thomasina", "Tia", "Tiana", "Tiffany", "Tilly", "Tina", "Toni", "Tonia", "Tonya",
-                //    "Tori", "Tracey", "Traci", "Tracie", "Tracy", "Tricia", "Trina", "Trinity", "Trish", "Trisha",
-                //    "Trista", "Trixie", "Trixy", "Trudy", "Tsipi", "Tsiporah", "Tyra", "Ulli", "Ulrica", "Ulrike", "Uma", 
-                //    "Una", "Ursula", "Valarie", "Valentina", "Valeria", "Valerie", "Vanessa", "Vashti", "Veda",
-                //    "Velma", "Venetia", "Venus", "Vera", "Verity", "Veronica", "Vicki", "Vickie", "Vicky", "Victoria",
-                //    "Viola", "Violet", "Virginia", "Vivian", "Viviana", "Vivien", "Vivienne", "Vonda", "Wallis", "Wanda", 
-                //    "Waverley", "Wendi", "Wendy", "Whitney", "Wilhelmina", "Willow", "Wilma", "Winnie", "Winnifred",
-                //    "Winona", "Winter", "Xanthe", "Xaviera", "Xena", "Xia", "Ximena", "Xochil", "Xochitl", "Yasmin",
-                //    "Yasmine", "Yazmin", "Yelena", "Yesenia", "Yolanda", "Ysabel", "Yulissa", "Yvaine", "Yvette",
-                //    "Yvonne", "Zada", "Zaheera", "Zahra", "Zaira", "Zakia", "Zali", "Zara", "Zarephath", "Zaria", "Zaya", 
-                //    "Zayla", "Zelda", "Zelida", "Zelina", "Zena", "Zendaya", "Zia", "Zina", "Zipporah", "Ziva", "Zoe",
-                //    "Zoey", "Zola", "Zora", "Zoya", "Zsa Zsa", "Zula", "Zuri", "Zyana"
-                //};
+                {
+                    "Aaliyah", "Aarushi", "Abbey", "Abbi", "Abbie", "Abby", "Abi", "Abia", "Abigail", "Aby", "Acacia",
+                    "Ada", "Adalia", "Adalyn", "Addie", "Addison", "Adelaide", "Adele", "Adelia", "Adelina", "Adeline",
+                    "Adreanna", "Adriana", "Adrianna", "Adrianne", "Adrienne", "Aeowynn", "Aerona", "Agatha", "Aggie",
+                    "Agnes", "Aida", "Aileen", "Aimee", "Aine", "Ainsleigh", "Ainsley", "Aisha", "Aisling", "Alaina",
+                    "Alana", "Alanis", "Alanna", "Alannah", "Alayah", "Alayna", "Alba", "Aleah", "Alecia", "Aleisha",
+                    "Alejandra", "Alena", "Alessandra", "Alessia", "Alex", "Alexa", "Alexandra", "Alexandria", "Alexia",
+                    "Alexis", "Alexus", "Ali", "Alia", "Alice", "Alicia", "Alina", "Alisa", "Alisha", "Alison", "Alissa", 
+                    "Alivia", "Aliyah", "Alize", "Alka", "Allie", "Allison", "Ally", "Allyson", "Alma", "Alondra",
+                    "Alycia", "Alyshialynn", "Alyson", "Alyssa", "Alyssia", "Amalia", "Amanda", "Amani", "Amara",
+                    "Amari", "Amaris", "Amaya", "Amber", "Amelia", "Amelie", "America", "Amethyst", "Amie", "Amina",
+                    "Amirah", "Amy", "Amya", "Ana", "Anabel", "Anabelle", "Anahi", "Anais", "Anamaria", "Ananya",
+                    "Anastasia", "Andie", "Andrea", "Andromeda", "Angel", "Angela", "Angelia", "Angelica", "Angelina",
+                    "Angeline", "Angelique", "Angie", "Anika", "Anisa", "Anita", "Aniya", "Aniyah", "Anjali", "Ann",
+                    "Anna", "Annabel", "Annabella", "Annabelle", "Annabeth", "Annalisa", "Annalise", "Anne", "Anneke",
+                    "Annelisse", "Annemarie", "Annette", "Annie", "Annika", "Annmarie", "Anselma", "Anthea",
+                    "Antoinette", "Antonia", "Anuja", "Anusha", "Anya", "Aoibhe", "Aoibheann", "Aoife", "Aphrodite",
+                    "Apple", "April", "Aqua", "Arabella", "Aria", "Ariadne", "Ariana", "Arianna", "Arianne", "Ariel",
+                    "Ariella", "Arielle", "Arisha", "Arleen", "Arlene", "Artemis", "Arwen", "Arya", "Asha", "Ashanti",
+                    "Ashlee", "Ashleigh", "Ashley", "Ashlie", "Ashlyn", "Ashlynn", "Ashton", "Ashvini", "Asia", "Asma",
+                    "Aspen", "Astrid", "Athena", "Aubree", "Aubrey", "Audra", "Audrey", "Audrina", "Augustina",
+                    "Aurelia", "Aurora", "Autumn", "Ava", "Avalon", "Avery", "Avril", "Aya", "Ayana", "Ayanna", "Ayesha", 
+                    "Ayisha", "Ayla", "Azalea", "Azaria", "Azariah", "Bailey", "Barbara", "Barbie", "Baylee", "Bea",
+                    "Beatrice", "Beatrix", "Becca", "Beccy", "Becky", "Belinda", "Bella", "Bellatrix", "Belle", "Benita", 
+                    "Benthe", "Bernadette", "Bernice", "Bertha", "Beryl", "Bess", "Beth", "Bethan", "Bethanie",
+                    "Bethany", "Betsy", "Bettina", "Betty", "Beverly", "Beyonce", "Bhu", "Bianca", "Billie", "Blair",
+                    "Blaire", "Blake", "Blanche", "Bliss", "Bloom", "Blossom", "Blythe", "Bobbi", "Bobbie", "Bonita",
+                    "Bonnie", "Braelyn", "Brandi", "Brandy", "Braylee", "Brea", "Breanna", "Bree", "Breeze", "Brenda",
+                    "Brenna", "Bria", "Briana", "Brianna", "Brianne", "Briar", "Bridget", "Bridgette", "Bridie",
+                    "Briella", "Brielle", "Briley", "Brinley", "Briony", "Brisa", "Britney", "Britt", "Brittany",
+                    "Brittney", "Brogan", "Bronte", "Bronwen", "Bronwyn", "Bronwynn", "Brooke", "Brooklyn", "Brooklynn",
+                    "Bryanna", "Brylee", "Bryn", "Brynlee", "Brynn", "Bryony", "Bunty", "Cadence", "Cailin", "Caitlan",
+                    "Caitlin", "Caitlyn", "Caleigh", "Cali", "Callie", "Calliope", "Callista", "Calypso", "Cameron",
+                    "Cami", "Camila", "Camilla", "Camille", "Camryn", "Candace", "Candice", "Candy", "Caoimhe",
+                    "Caprice", "Cara", "Carina", "Caris", "Carissa", "Carla", "Carley", "Carlie", "Carly", "Carlynn",
+                    "Carmel", "Carmela", "Carmen", "Carol", "Carole", "Carolina", "Caroline", "Carolyn", "Carrie",
+                    "Carter", "Carys", "Casey", "Cassandra", "Cassia", "Cassidy", "Cassie", "Cat", "Cate", "Caterina",
+                    "Cathalina", "Catherine", "Cathleen", "Cathy", "Catlin", "Catrina", "Catriona", "Caye", "Cayla", "Cece",
+                    "Cecelia", "Cecilia", "Cecily", "Celeste", "Celestia", "Celestine", "Celia", "Celina", "Celine",
+                    "Cerys", "Chanel", "Chanelle", "Chantal", "Chantelle", "Charis", "Charissa", "Charisse", "Charity",
+                    "Charlene", "Charley", "Charlie", "Charlize", "Charlotte", "Charmaine", "Chastity", "Chelsea",
+                    "Chelsey", "Chenille", "Cher", "Cheri", "Cherie", "Cherry", "Cheryl", "Cheyanne", "Cheyenne",
+                    "Chiara", "Chloe", "Chris", "Chrissy", "Christa", "Christabel", "Christal", "Christen", "Christi",
+                    "Christiana", "Christie", "Christina", "Christine", "Christy", "Chrystal", "Ciara", "Cici", "Ciel",
+                    "Cierra", "Cindy", "Claire", "Clara", "Clarabelle", "Clare", "Clarice", "Clarissa", "Clarisse",
+                    "Clary", "Claudette", "Claudia", "Claudine", "Clea", "Clementine", "Cleo", "Clodagh", "Clover",
+                    "Coco", "Colette", "Colleen", "Connie", "Constance", "Cora", "Coral", "Coralie", "Coraline",
+                    "Cordelia", "Cori", "Corina", "Corinne", "Corra", "Cosette", "Courtney", "Cristina", "Crystal",
+                    "Cynthia", "Dagmar", "Dahlia", "Daisy", "Dakota", "Dana", "Danette", "Dani", "Danica", "Daniela",
+                    "Daniella", "Danielle", "Danika", "Daphne", "Dara", "Darcey", "Darcie", "Darcy", "Daria", "Darla",
+                    "Darlene", "Dashee", "Davida", "Davina", "Dawn", "Dayna", "Daysha", "Deana", "Deann", "Deanna",
+                    "Deanne", "Debbie", "Debora", "Deborah", "Debra", "Dee", "Deedee", "Deena", "Deidre", "Deirdre",
+                    "Deja", "Delaney", "Delanie", "Delia", "Delilah", "Della", "Delores", "Delphine", "Demetria", "Demi", 
+                    "Dena", "Denise", "Denny", "Desiree", "Destinee", "Destiny", "Diamond", "Diana", "Diane", "Dianna", 
+                    "Dianne", "Dido", "Dina", "Dionne", "Dior", "Dixie", "Dolly", "Dolores", "Dominique", "Donna",
+                    "Dora", "Doreen", "Doris", "Dorothy", "Dot", "Drew", "Dulce", "Eabha", "Ebony", "Echo", "Eden",
+                    "Edie", "Edith", "Edna", "Edwina", "Effie", "Eileen", "Eilidh", "Eimear", "Ekaterina", "Elaina",
+                    "Elaine", "Elana", "Eleanor", "Electra", "Elektra", "Elena", "Eliana", "Elin", "Elina", "Elisa",
+                    "Eliza", "Elisabeth", "Elise", "Eliza", "Elizabeth", "Ella", "Elle", "Ellen", "Ellery", "Ellie",
+                    "Ellis", "Elly", "Elodie", "Eloise", "Elora", "Elsa", "Elsie", "Elspeth", "Elvira", "Elysia",
+                    "Elyza", "Emanuela", "Ember", "Emely", "Emer", "Emerald", "Emerson", "Emilee", "Emilia", "Emilie",
+                    "Emily", "Emma", "Emmaline", "Emmalyn", "Emmanuelle", "Emmeline", "Emmie", "Emmy", "Enya", "Erica",
+                    "Erika", "Erin", "Eris", "Erzsébet", "Eryn", "Esmay", "Esme", "Esmeralda", "Esmerelda", "Esperanza",
+                    "Estee", "Estelle", "Ester", "Esther", "Estrella", "Ethel", "Eugenie", "Eunice", "Eva", "Evangeline", 
+                    "Eve", "Evegeniya", "Evelin", "Evelyn", "Everly", "Evie", "Evita", "Fabrizia", "Faith", "Fallon",
+                    "Fanny", "Farah", "Farrah", "Fatima", "Fawn", "Fay", "Faye", "Felicia", "Felicity", "Fern",
+                    "Fernanda", "Ffion", "Fifi", "Fiona", "Fleur", "Flor", "Flora", "Florence", "Fran", "Frances",
+                    "Francesca", "Francine", "Frankie", "Freda", "Freya", "Frida", "Gabby", "Gabriela", "Gabriella",
+                    "Gabrielle", "Gail", "Galadriel", "Gayle", "Gaynor", "Geena", "Gemma", "Gena", "Genesis",
+                    "Genevieve", "Georgette", "Georgia", "Georgie", "Georgina", "Geraldine", "Gertrude", "Gia", "Gianna", 
+                    "Gigi", "Gillian", "Gina", "Ginger", "Ginny", "Giovanna", "Gisela", "Giselle", "Gisselle",
+                    "Gladys", "Glenda", "Gloria", "Goldie", "Grace", "Gracelyn", "Gracie", "Grainne", "Greta",
+                    "Gretchen", "Griselda", "Guadalupe", "Guadelupe", "Guinevere", "Gwen", "Gwendolyn", "Gwyneth",
+                    "Habiba", "Hadassah", "Hadley", "Hailee", "Hailey", "Haleigh", "Haley", "Halle", "Hallie", "Hanna",
+                    "Hannah", "Harley", "Harmony", "Harper", "Harriet", "Hattie", "Hayden", "Haylee", "Hayley", "Hazel",
+                    "Hazeline", "Heather", "Heaven", "Heidi", "Helen", "Helena", "Helga", "Helina", "Henrietta",
+                    "Hepsiba", "Hera", "Hermione", "Hester", "Hetty", "Hilary", "Hilda", "Hollie", "Holly", "Honesty",
+                    "Honey", "Honor", "Honour", "Hope", "Hosanna", "Hyacinth", "Ianthe", "Ida", "Ila", "Ilene", "Iliana", 
+                    "Ilona", "Ilse", "Imani", "Imelda", "Imogen", "India", "Indie", "Indigo", "Indira", "Ines", "Inga", 
+                    "Ingrid", "Iona", "Ira", "Irene", "Iris", "Irma", "Isa", "Isabeau", "Isabel", "Isabella",
+                    "Isabelle", "Isha", "Isis", "Isla", "Isobel", "Isolde", "Itzel", "Ivana", "Ivanna", "Ivy", "Iyanna",
+                    "Izabella", "Izidora", "Izzy", "Jacinda", "Jacinta", "Jackie", "Jacqueline", "Jacquelyn", "Jada",
+                    "Jade", "Jaden", "Jadyn", "Jael", "Jaelynn", "Jaida", "Jaime", "Jamie", "Jamiya", "Jan", "Jana",
+                    "Janae", "Jancis", "Jane", "Janelle", "Janessa", "Janet", "Janette", "Janice", "Janie", "Janine",
+                    "Janis", "Janiya", "January", "Jaqueline", "Jasmin", "Jasmine", "Jaya", "Jayda", "Jayden", "Jayla",
+                    "Jaylinn", "Jaylynn", "Jayne", "Jazlyn", "Jazmin", "Jazmine", "Jean", "Jeanette", "Jeanine",
+                    "Jeanne", "Jeannette", "Jeannie", "Jeannine", "Jemima", "Jemma", "Jen", "Jena", "Jenae", "Jenessa", "Jenna",
+                    "Jenni", "Jennie", "Jennifer", "Jenny", "Jensen", "Jeri", "Jerri", "Jess", "Jessa", "Jesse",
+                    "Jessica", "Jessie", "Jet", "Jewel", "Jezebel", "Jill", "Jillian", "Jo", "Joan", "Joann", "Joanna",
+                    "Joanne", "Jocelyn", "Jodi", "Jodie", "Jody", "Joelle", "Johanna", "Joleen", "Jolene", "Jolie",
+                    "Joni", "Jordan", "Jordana", "Jordyn", "Jorja", "Joselyn", "Josephine", "Josie", "Joy", "Joyce",
+                    "Joyel", "Juanita", "Judith", "Judy", "Jules", "Julia", "Juliana", "Julianna", "Julianne", "Julie",
+                    "Juliet", "Juliette", "Julissa", "July", "June", "Juno", "Justice", "Justina", "Justine", "Kacey",
+                    "Kaidence", "Kailey", "Kailyn", "Kaitlin", "Kaitlyn", "Kaitlynn", "Kalea", "Kaleigh", "Kali",
+                    "Kalia", "Kamala", "Kamryn", "Kara", "Karen", "Kari", "Karin", "Karina", "Karissa", "Karla",
+                    "Karlee", "Karly", "Karolina", "Karyn", "Kasey", "Kassandra", "Kassidy", "Kassie", "Kat", "Katara",
+                    "Katarina", "Kate", "Katelyn", "Katelynn", "Katerina", "Katharine", "Katherine", "Kathleen",
+                    "Kathryn", "Kathy", "Katia", "Katie", "Katja", "Katlyn", "Katrina", "Katy", "Katya", "Kay", "Kaya",
+                    "Kaye", "Kayla", "Kaylee", "Kayleigh", "Kayley", "Kaylie", "Kaylin", "Keara", "Keeley", "Keely",
+                    "Keira", "Keisha", "Kelis", "Kelley", "Kelli", "Kellie", "Kelly", "Kelsey", "Kelsie", "Kendall",
+                    "Kendra", "Kennedy", "Kenzie", "Keri", "Kerian", "Kerri", "Kerry", "Keturah", "Kia", "Kiana",
+                    "Kiara", "Kiera", "Kierra", "Kiersten", "Kiki", "Kiley", "Kim", "Kimberlee", "Kimberley", "Kimberly", 
+                    "Kimbriella", "Kimmy", "Kinley", "Kinsey", "Kinsley", "Kira", "Kirsten", "Kirstin", "Kirsty",
+                    "Kiswa", "Kitty", "Kizzy", "Kloe", "Kora", "Kori", "Kourtney", "Kris", "Krista", "Kristen", "Kristi", 
+                    "Kristie", "Kristin", "Kristina", "Kristine", "Kristy", "Krystal", "Kyla", "Kylee", "Kyleigh",
+                    "Kylie", "Kyra", "Lacey", "Lacie", "Lacy", "Ladonna", "Laila", "Lakyn", "Lala", "Lana", "Laney",
+                    "Lani", "Lara", "Laralee", "Larissa", "Lateesha", "Latoya", "Laura", "Laurel", "Lauren", "Lauri",
+                    "Laurie", "Lauryn", "Lavana", "Lavender", "Lavinia", "Layla", "Lea", "Leah", "Leandra", "Leann",
+                    "Leanna", "Leanne", "Lee", "Leela", "Leena", "Leia", "Leigh", "Leila", "Leilani", "Lela", "Lena",
+                    "Lenore", "Leona", "Leonie", "Leora", "Lesa", "Lesley", "Leslie", "Lesly", "Leticia", "Lettie",
+                    "Lexi", "Lexia", "Lexie", "Lexis", "Lia", "Liana", "Lianne", "Libby", "Liberty", "Lidia", "Lila",
+                    "Lilac", "Lilah", "Lilian", "Liliana", "Lilita", "Lilith", "Lillian", "Lillie", "Lilly", "Lily",
+                    "Lina", "Linda", "Lindsay", "Lindsey", "Lindy", "Lisa", "Lisette", "Liv", "Livia", "Livvy", "Liz",
+                    "Liza", "Lizbeth", "Lizette", "Lizzie", "Lizzy", "Ljubliana", "Ljubljana", "Logan", "Lois", "Lola",
+                    "Lolita", "London", "Lora", "Loran", "Lorelei", "Loren", "Lorena", "Loretta", "Lori", "Lorie",
+                    "Lorna", "Lorraine", "Lorri", "Lorrie", "Lottie", "Lotus", "Louisa", "Louise", "Luann", "Lucia",
+                    "Luciana", "Lucie", "Lucille", "Lucinda", "Lucky", "Lucretia", "Lucy", "Ludmilla", "Luisa", "Lulu",
+                    "Luna", "Lupita", "Lydia", "Lyla", "Lyna", "Lynda", "Lyndsey", "Lynette", "Lynn", "Lynne",
+                    "Lynnette", "Lynsey", "Lyra", "Lyric", "Mabel", "Mabeline", "Macey", "Macie", "Mackenzie", "Macy",
+                    "Mada", "Madalyn", "Maddie", "Maddison", "Maddy", "Madeleine", "Madeline", "Madelyn", "Madison",
+                    "Madisyn", "Madyson", "Mae", "Maeve", "Magda", "Magdalena", "Magdalene", "Maggie", "Maia", "Maire",
+                    "Mairead", "Maisie", "Maisy", "Maja", "Makayla", "Makenna", "Makenzie", "Malia", "Malinda",
+                    "Mallory", "Malory", "Mandy", "Manuela", "Mara", "Marcela", "Marcella", "Marci", "Marcia", "Marcy",
+                    "Margaret", "Margarita", "Margie", "Margo", "Margot", "Margret", "Maria", "Mariah", "Mariam",
+                    "Marian", "Mariana", "Marianna", "Marianne", "Maribel", "Marie", "Mariela", "Marilyn", "Marina",
+                    "Marion", "Marisa", "Marisol", "Marissa", "Maritza", "Marjorie", "Marla", "Marlee", "Marlene",
+                    "Marley", "Marnie", "Marsha", "Martha", "Martina", "Mary", "Maryam", "Maryann", "Marybeth",
+                    "Matilda", "Maude", "Maura", "Maureen", "Mavis", "Maxine", "May", "Maya", "Mayra", "Mckayla",
+                    "Mckenna", "Mckenzie", "Mea", "Meadow", "Meagan", "Meera", "Meg", "Megan", "Meghan", "Mei", "Mei-li", 
+                    "Mel", "Melanie", "Melikalikimaka", "Melina", "Melinda", "Melissa", "Melody", "Mercedes", "Mercy",
+                    "Meredith", "Merida", "Meryl", "Mia", "Michaela", "Michele", "Michelle", "Mika", "Mikaela",
+                    "Mikayla", "Mikhaela", "Mila", "Mildred", "Milena", "Miley", "Millicent", "Millie", "Milly", "Mimi",
+                    "Mina", "Mindy", "Minerva", "Minnie", "Mira", "Miranda", "Miriam", "Mirjam", "Misty", "Mitzi",
+                    "Moira", "Mollie", "Molly", "Mona", "Monica", "Monika", "Monique", "Montana", "Morgan", "Morgana",
+                    "Moya", "Murderess", "Muriel", "Mya", "Myfanwy", "Myla", "Myra", "Myrna", "Naama", "Nadene", "Nadia", 
+                    "Nadine", "Nahaliel", "Naja", "Nala", "Nancy", "Nanette", "Naomi", "Natalia", "Natalie",
+                    "Natascha", "Natasha", "Natisha", "Naya", "Nayeli", "Nell", "Nellie", "Nelly", "Nena", "Nerissa",
+                    "Nessa", "Nevaeh", "Neve", "Nia", "Niamh", "Nichola", "Nichole", "Nicki", "Nicky", "Nicola",
+                    "Nicole", "Nicolette", "Nicolina", "Nieve", "Niki", "Nikita", "Nikki", "Nikolina", "Nila", "Nina",
+                    "Nishka", "Noelle", "Nola", "Nora", "Noreen", "Norma", "Nova", "Oasis", "Ocean", "Octavia", "Odalis", 
+                    "Odele", "Odelia", "Odette", "Ofra", "Olga", "Olive", "Olivia", "Oonagh", "Opal", "Ophelia",
+                    "Ophra", "Orianna", "Orla", "Orlaith", "Ottavia", "Padme", "Page", "Paige", "Paisley", "Paloma",
+                    "Pam", "Pamela", "Pandora", "Pansy", "Paola", "Paris", "Patience", "Patrice", "Patricia", "Patsy",
+                    "Patti", "Patty", "Paula", "Paulette", "Paulina", "Pauline", "Payton", "Pearl", "Peggy", "Penelope",
+                    "Penny", "Perla", "Perrie", "Persephone", "Petra", "Petunia", "Peyton", "Phillipa", "Philomena",
+                    "Phoebe", "Phoenix", "Phyllis", "Piper", "Pippa", "Pixie", "Polly", "Poppy", "Porsche", "Porsha",
+                    "Portia", "Precious", "Preethi", "Presley", "Preslie", "Primrose", "Princess", "Prisca", "Priscilla", 
+                    "Priya", "Promise", "Prudence", "Prue", "Queenie", "Quiana", "Quinn", "Rabia", "Rachael", "Rachel", 
+                    "Rachelle", "Rae", "Raegan", "Raelyn", "Raina", "Raine", "Ramona", "Ramsha", "Randi", "Rani",
+                    "Rania", "Rapunzel", "Raquel", "Raven", "Raya", "Rayna", "Rayne", "Reagan", "Reanna", "Reanne",
+                    "Reba", "Rebecca", "Rebekah", "Reese", "Regan", "Regina", "Reilly", "Reina", "Remi", "Rena",
+                    "Renata", "Renate", "Rene", "Renee", "Renesmee", "Reyna", "Rhea", "Rhian", "Rhianna", "Rhiannon",
+                    "Rhoda", "Rhona", "Rhonda", "Ria", "Rianna", "Ricki", "Rihanna", "Rikki", "Riley", "Rita", "River",
+                    "Roanne", "Roberta", "Robin", "Robyn", "Rochelle", "Rocio", "Roisin", "Rolanda", "Ronda", "Roni",
+                    "Rosa", "Rosalie", "Rosalind", "Rosalynn", "Rosanna", "Rose", "Rosella", "Rosemarie", "Rosemary",
+                    "Rosetta", "Rosie", "Rosy", "Rowan", "Rowena", "Roxanne", "Roxie", "Roxy", "Rozlynn", "Ruby", "Rue",
+                    "Rusty", "Ruth", "Rydel", "Rylee", "Ryleigh", "Rylie", "Sabina", "Sabine", "Sabrina", "Sade",
+                    "Sadhbh", "Sadie", "Saffron", "Saffronia", "Safire", "Safiya", "Sage", "Sahara", "Saige", "Saira",
+                    "Sally", "Sallyann", "Salma", "Salome", "Sam", "Samantha", "Samara", "Samia", "Samira", "Sammie",
+                    "Sammy", "Sandra", "Sandy", "Santina", "Saoirse", "Sapphire", "Sara", "Sarah", "Sarina", "Sariya",
+                    "Sascha", "Sasha", "Saskia", "Savanna", "Savannah", "Scarlet", "Scarlett", "Sebastianne", "Selah",
+                    "Selena", "Selina", "Selma", "Senuri", "Seren", "Serena", "Serenity", "Shakira", "Shana", "Shania",
+                    "Shanice", "Shannon", "Shari", "Sharon", "Shauna", "Shawn", "Shawna", "Shawnette", "Shayla", "Shea",
+                    "Sheena", "Sheila", "Shelby", "Shelia", "Shelley", "Shelly", "Sheri", "Sheridan", "Sherri",
+                    "Sherrie", "Sherry", "Sheryl", "Sheva", "Shirley", "Shona", "Shreya", "Shyla", "Sian", "Sidney",
+                    "Sienna", "Sierra", "Silvia", "Simone", "Simran", "Sinead", "Siobhan", "Sky", "Skye", "Skylar",
+                    "Skyler", "Sloane", "Sofia", "Sofie", "Solange", "Sondra", "Sonia", "Sonja", "Sonya", "Sophia",
+                    "Sophie", "Sophy", "Stacey", "Staci", "Stacie", "Stacy", "Star", "Starla", "Stefanie", "Stella",
+                    "Steph", "Stephanie", "Sue", "Suki", "Summer", "Susan", "Susanna", "Susannah", "Susanne", "Susie",
+                    "Sutton", "Suzanna", "Suzanne", "Suzette", "Suzie", "Suzy", "Sybil", "Sydney", "Sylvia", "Sylvie",
+                    "Tabatha", "Tabitha", "Tahlia", "Tala", "Talia", "Taliyah", "Tallulah", "Tamara", "Tamera", "Tami",
+                    "Tamia", "Tamika", "Tammi", "Tammie", "Tammy", "Tamra", "Tamsin", "Tania", "Tanisha", "Tanya",
+                    "Tara", "Taryn", "Tasha", "Tatiana", "Tatum", "Tawana", "Taya", "Tayla", "Taylah", "Tayler",
+                    "Taylor", "Teagan", "Teegan", "Tegan", "Tenille", "Teresa", "Teri", "Terri", "Terrie", "Terry",
+                    "Tess", "Tessa", "Thalia", "Thea", "Thelma", "Theodora", "Theophilia", "Theresa", "Therese",
+                    "Therousia", "Thomasina", "Tia", "Tiana", "Tiffany", "Tilly", "Tina", "Toni", "Tonia", "Tonya",
+                    "Tori", "Tracey", "Traci", "Tracie", "Tracy", "Tricia", "Trina", "Trinity", "Trish", "Trisha",
+                    "Trista", "Trixie", "Trixy", "Trudy", "Tsipi", "Tsiporah", "Tyra", "Ulli", "Ulrica", "Ulrike", "Uma", 
+                    "Una", "Ursula", "Valarie", "Valentina", "Valeria", "Valerie", "Vanessa", "Vashti", "Veda",
+                    "Velma", "Venetia", "Venus", "Vera", "Verity", "Veronica", "Vicki", "Vickie", "Vicky", "Victoria",
+                    "Viola", "Violet", "Virginia", "Vivian", "Viviana", "Vivien", "Vivienne", "Vonda", "Wallis", "Wanda", 
+                    "Waverley", "Wendi", "Wendy", "Whitney", "Wilhelmina", "Willow", "Wilma", "Winnie", "Winnifred",
+                    "Winona", "Winter", "Xanthe", "Xaviera", "Xena", "Xia", "Ximena", "Xochil", "Xochitl", "Yasmin",
+                    "Yasmine", "Yazmin", "Yelena", "Yesenia", "Yolanda", "Ysabel", "Yulissa", "Yvaine", "Yvette",
+                    "Yvonne", "Zada", "Zaheera", "Zahra", "Zaira", "Zakia", "Zali", "Zara", "Zarephath", "Zaria", "Zaya", 
+                    "Zayla", "Zelda", "Zelida", "Zelina", "Zena", "Zendaya", "Zia", "Zina", "Zipporah", "Ziva", "Zoe",
+                    "Zoey", "Zola", "Zora", "Zoya", "Zsa Zsa", "Zula", "Zuri", "Zyana"
+                };
             #endregion Female Names Array
 
             return RandomSelect(femaleNames);
@@ -296,8 +297,179 @@ namespace EpmPersonGenerator.Classes
 
         public static string RandomizeMaleFirstName()
         {
-            string[] maleNames = db.Names.Where(fn => fn.Gender == CommonStrings.gMale).Select(fn => fn.Value).ToArray();
-            
+            string[] maleNames =
+
+                #region Male First Names
+
+                {
+                "Aaron", "Abdul", "Abdullah", "Abel", "Abihud", "Abraham", "Abram", "Abriel", "Ace", "Adam", "Adan",
+                "Ade", "Aden", "Adnan", "Adrian", "Aelfred", "Ahmad", "Ahmed", "Aidan", "Aiden", "Ainsley", "Al",
+                "Alain", "Alan", "Alastair", "Albert", "Alberto", "Albie", "Alden", "Aldo", "Alec", "Alejandro",
+                "Alen", "Alesandro", "Alex", "Alexander", "Alexis", "Alfie", "Alfonso", "Alfred", "Alfredo", "Ali",
+                "Alistair", "Allan", "Allen", "Alonzo", "Aloysius", "Alphonso", "Alton", "Alvin", "Amari", "Amir",
+                "Amit", "Amos", "Anakin", "Anders", "Andre", "Andreas", "Andres", "Andrew", "Andy", "Angel",
+                "Angelo", "Angus", "Anthony", "Anton", "Antonio", "Antony", "Aragorn", "Aran", "Archer", "Archie",
+                "Ari", "Arjun", "Arlo", "Arman", "Armando", "Arnold", "Arrie", "Art", "Arthur", "Arturo", "Arwin",
+                "Asa", "Asad", "Ash", "Asher", "Ashley", "Ashton", "Asif", "Aspen", "Aston", "Athanasius", "Atticus",
+                "Attila", "Aubrey", "Audwin", "August", "Augustine", "Augustus", "Austen", "Austin", "Avery",
+                "Axel", "Ayaan", "Ayden",
+                "Bailey", "Balthazar", "Barclay", "Barnaby", "Barney", "Barrett", "Barron", "Barry", "Bart",
+                "Bartholomew", "Basil", "Bay", "Baylor", "Beau", "Beck", "Beckett", "Bellamy", "Beltashazzar", "Ben",
+                "Benedict", "Benjamin", "Benji", "Benjy", "Bennett", "Bennie", "Benny", "Benson", "Bentley",
+                "Bently", "Bernard", "Bernardo", "Bernie", "Bert", "Bertie", "Bertram", "Bevan", "Bill", "Billy",
+                "Bladen", "Blain", "Blaine", "Blair", "Blaise", "Blake", "Blaze", "Blue", "Bob", "Bobby", "Bodie",
+                "Boris", "Boromir", "Boston", "Boyd", "Brad", "Braden", "Bradford", "Bradley", "Bradwin", "Brady",
+                "Braeden", "Bram", "Branden", "Brandon", "Brantley", "Braxton", "Brayan", "Brayden", "Braydon",
+                "Braylon", "Brendan", "Brenden", "Brendon", "Brennan", "Brent", "Bret", "Brett", "Brevyn", "Brian",
+                "Brice", "Brinley", "Brock", "Brodie", "Brody", "Brogan", "Bronson", "Brooks", "Bruce", "Bruno",
+                "Bruton", "Bryan", "Bryant", "Bryce", "Brydon", "Bryon", "Bryson", "Buck", "Buddy", "Burt", "Burton",
+                "Buster", "Butch", "Byron",
+                "Cadby", "Cade", "Caden", "Cael", "Caelan", "Caesar", "Cai", "Caiden", "Cain", "Caius", "Cal",
+                "Caleb", "Calhoun", "Caligula", "Callan", "Callum", "Calum", "Calvin", "Cam", "Camden", "Cameron",
+                "Campbell", "Camron", "Capitan", "Captain", "Carey", "Carl", "Carlos", "Carlton", "Carsen", "Carson",
+                "Carter", "Cary", "Casey", "Cash", "Casper", "Cassius", "Castiel", "Cathal", "Cato", "Cavan",
+                "Cayden", "Caydon", "Cecil", "Cedric", "Cesar", "Chad", "Chance", "Chandler", "Channing", "Charles",
+                "Charlie", "Chase", "Chauncey", "Chaz", "Che", "Chesney", "Chester", "Chesterfield", "Cheswick",
+                "Chevy", "Chip", "Chris", "Christian", "Christopher", "Chuck", "Cian", "Ciaran", "Cillian", "Clancy",
+                "Clarence", "Clark", "Claude", "Clay", "Clayton", "Clement", "Cliff", "Clifford", "Clifton",
+                "Clint", "Clinton", "Clive", "Clyde", "Coby", "Cody", "Cohen", "Colby", "Cole", "Colin", "Collin",
+                "Colm", "Colonel", "Colt", "Colton", "Conan", "Conner", "Connor", "Conor", "Conrad", "Constantine",
+                "Cooper", "Corbin", "Corey", "Cormac", "Cornelius", "Cory", "Coward", "Craig", "Cristian",
+                "Cristobal", "Cruz", "Cullen", "Curt", "Curtis", "Cuthbert", "Cut-purse", "Cyril", "Cyrus",
+                "Dacey", "Daire", "Dakota", "Dale", "Dallas", "Dalton", "Damian", "Damien", "Damion", "Damon", "Dan",
+                "Dana", "Dane", "Daniel", "Danny", "Dante", "Dara", "Daragh", "Darcy", "Daren", "Darian", "Darin",
+                "Dario", "Darius", "Darnell", "Darragh", "Darrel", "Darrell", "Darren", "Darrin", "Darryl", "Darwin",
+                "Daryl", "Dash", "Dashawn", "Dave", "David", "Davion", "Davis", "Dawson", "Dax", "Daxter",
+                "Daxton", "Dayton", "Deacon", "Dean", "Deandre", "Declan", "Deepak", "Delbert", "Demetrius", "Denis",
+                "Dennis", "Denver", "Denzel", "Derek", "Derrick", "Deshaun", "Deshawn", "Desmond", "Dev", "Devin",
+                "Devlin", "Devon", "Dewayne", "Dewey", "Dexter", "Dhalsim", "Diarmaid", "Diarmuid", "Dick", "Diego",
+                "Dieter", "Dillon", "Dimitri", "Dinesh", "Dino", "Dion", "Dirk", "Django", "Dmitri", "Dmitriy",
+                "Dominic", "Dominick", "Don", "Donald", "Donnie", "Donovan", "Dorian", "Doug", "Douglas", "Doyle",
+                "Drake", "Drew", "Duane", "Duke", "Duncan", "Dustin", "Dwayne", "Dwight", "Dylan",
+                "Eamon", "Earl", "Earnest", "Easton", "Ebenezer", "Ed", "Eddie", "Eddy", "Eden", "Edgar", "Edison",
+                "Edmund", "Edric", "Eduardo", "Edward", "Edwardo", "Edwin", "Efrain", "Efren", "Egan", "Egon", "Eli",
+                "Elias", "Elijah", "Eliot", "Elisha", "Ellington", "Elliot", "Elliott", "Ellis", "Elmer", "Elmo",
+                "Elton", "Elvis", "Emanuel", "Emerson", "Emery", "Emet", "Emil", "Emiliano", "Emilio", "Emmanuel",
+                "Emmet", "Emmett", "Ennio", "Enoch", "Enrique", "Enzo", "Eoghan", "Eoin", "Erasmus", "Eric", "Erick",
+                "Erik", "Ernest", "Ernesto", "Ernie", "Errol", "Ervin", "Esau", "Esteban", "Ethan", "Etienne",
+                "Euan", "Eugene", "Eusebius", "Eustace", "Evan", "Evangelos", "Everett", "Ewan", "Ezekiel", "Ezio",
+                "Ezra",
+                "Fabian", "Fabio", "Faisal", "Faramir", "Farley", "Febian", "Felipe", "Felix", "Fergus", "Fernando",
+                "Festivus", "Festus", "Fidel", "Finbar", "Finlay", "Finley", "Finn", "Fionn", "Fletcher", "Floyd",
+                "Flynn", "Fortunatus", "Forrest", "Foster", "Fox", "Francesco", "Francis", "Francisco", "Frank",
+                "Frankie", "Franklin", "Franklyn", "Franz-Josef", "Fraser", "Fred", "Freddie", "Freddy", "Frederick",
+                "Fredrick", "Fritz", "Frodo",
+                "Gabe", "Gabriel", "Gael", "Gage", "Gale", "Galen", "Galileo", "Gamaliel", "Gandalf", "Gannon",
+                "Gareth", "Garett", "Garman", "Garret", "Garrett", "Garrison", "Garry", "Garth", "Gary", "Gaspar",
+                "Gaston", "Gavin", "Gene", "Geoff", "Geoffrey", "George", "Geraint", "Gerald", "Gerard", "Gerardo",
+                "Gerry", "Gian", "Gideon", "Gilbert", "Gilberto", "Giles", "Gilgamesh", "Gino", "Giorgio",
+                "Giovanni", "Glen", "Glenn", "Glyndwr", "Godfrey", "Godric", "Godwin", "Gordon", "Grady", "Graeme",
+                "Graham", "Grant", "Grayson", "Greg", "Gregg", "Gregor", "Gregory", "Grey", "Greyson", "Griffin",
+                "Guillermo", "Gunnar", "Gunner", "Gus", "Gustav", "Gustavo", "Günther", "Guy",
+                "Habakkuk", "Haggai", "Haiden", "Hal", "Hamish", "Han", "Hananiah", "Hank", "Hans", "Harlan",
+                "Harley", "Harold", "Harris", "Harrison", "Harry", "Harvey", "Hassan", "Hayden", "Hayes", "Heath",
+                "Hector", "Hendrix", "Henri", "Henry", "Herbert", "Herman", "Hezekiah", "Hilkiah", "Hiram", "Holden",
+                "Homer", "Horace", "Horatio", "Howard", "Hubert", "Hudson", "Hugh", "Hugo", "Humphrey", "Hunter",
+                "Huw", "Hywel",
+                "Iago", "Iain", "Ian", "Ianto", "Ibrahim", "Ichabod", "Idris", "Ieuan", "Iggy", "Ignacio",
+                "Ignatius", "Igor", "Ike", "Imran", "Indiana", "Inigo", "Ira", "Irving", "Irwin", "Isaac", "Isaiah",
+                "Ishmael", "Isiah", "Ismael", "Israel", "Issac", "Ivan", "Ivor",
+                "Jace", "Jack", "Jackie", "Jackson", "Jacob", "Jacoby", "Jacques", "Jaden", "Jadon", "Jagdeesh",
+                "Jagger", "Jago", "Jai", "Jaiden", "Jaime", "Jake", "Jakob", "Jalen", "Jamal", "James", "Jameson",
+                "Jamie", "Jamison", "Jared", "Jaroslav", "Jarrett", "Jarrod", "Jarvis", "Jase", "Jason", "Jasper",
+                "Jaspreet", "Javier", "Javon", "Jax", "Jaxon", "Jaxson", "Jay", "Jayce", "Jayden", "Jaydon",
+                "Jaylen", "Jaylin", "Jaylon", "Jayson", "Jazz", "Jean-Paul", "Jeb", "Jed", "Jediah", "Jedediah",
+                "Jedidiah", "Jeff", "Jefferson", "Jeffery", "Jeffrey", "Jeffry", "Jehoshaphat", "Jehu", "Jensen",
+                "Jenson", "Jerald", "Jeremiah", "Jeremy", "Jericho", "Jermaine", "Jerome", "Jerry", "Jesse",
+                "Jessie", "Jesus", "Jethro", "Jett", "Jim", "Jimmie", "Jimmy", "Joab", "Joachim", "Joaquin", "Jody",
+                "Joe", "Joel", "Joey", "Johan", "Johann", "John", "Johnathan", "Johnathon", "Johnnie", "Johnny",
+                "Jon", "Jonah", "Jonas", "Jonathan", "Jonathon", "Jonty", "Jordan", "Jordy", "Jorge", "Jose",
+                "Joseph", "Josh", "Joshua", "Josiah", "Josue", "Juan", "Juan Pablo", "Judah", "Judas", "Judd",
+                "Jude", "Julian", "Julio", "Julius", "Jupiter", "Jürgen", "Justice", "Justimus", "Justin", "Justo",
+                "Justus",
+                "Kade", "Kaden", "Kai", "Kaiden", "Kakashi", "Kale", "Kaleb", "Kalel", "Kameron", "Kane", "Karl",
+                "Karla", "Karthika", "Kash", "Kasper", "Kayden", "Kaylen", "Kayson", "Keanu", "Keaton", "Kedrick",
+                "Keegan", "Keenan", "Keith", "Kellen", "Kellin", "Kelly", "Kelvin", "Ken", "Kendall", "Kendrick",
+                "Kennedy", "Kenneth", "Kenny", "Kent", "Kerry", "Kevin", "Khalid", "Khalil", "Kian", "Kieran",
+                "Killian", "Kim", "Kingsley", "Kingston", "Kip", "Kiran", "Kirby", "Kirk", "Kit", "Klaus", "Klay",
+                "Kobe", "Koby", "Kody", "Kolby", "Kris", "Krish", "Kristian", "Kristoff", "Kristopher", "Kurt",
+                "Kurtis", "Kye", "Kylar", "Kyle", "Kylen", "Kyler", "Kyrin",
+                "Lacey", "Lachlan", "Lake", "Lamar", "Lamont", "Lance", "Landen", "Lando", "Landon", "Landyn",
+                "Lane", "Langdon", "Larry", "Lars", "Laurence", "Laurie", "Lawrence", "Lawson", "Layne", "Layton",
+                "Leandro", "Lee", "Leighton", "Leland", "Lennie", "Lennon", "Lennox", "Lenny", "Leo", "Leon",
+                "Leonard", "Leonardo", "Leonel", "Leopold", "Leroy", "Les", "Leslie", "Lester", "Leuan", "Lev",
+                "Leven", "Levi", "Lewis", "Lex", "Liam", "Lief", "Lincoln", "Link", "Linus", "Lionel", "Lisandro",
+                "Lloyd", "Lochlan", "Logan", "Lonnie", "Loren", "Lorenzo", "Loris", "Lou", "Louie", "Louis",
+                "Lowell", "Luca", "Lucas", "Lucian", "Luciano", "Ludwig", "Luigi", "Luis", "Lukas", "Lukasz", "Luke",
+                "Luther", "Lyle", "Lyndon", "Lynn", "Lysander",
+                "Mack", "Maddox", "Magnus", "Maher-shalal-hash-baz", "Majed", "Malachi", "Malakai", "Malcolm",
+                "Malik", "Manfred", "Manny", "Mansour", "Manuel", "Marc", "Marcel", "Marco", "Marcos", "Marcus",
+                "Mario", "Marion", "Mark", "Marley", "Marlon", "Marquis", "Marshall", "Martin", "Marty", "Martyn",
+                "Marvin", "Mason", "Massimo", "Mat", "Mateo", "Mathew", "Matt", "Matthew", "Matthias", "Maurice",
+                "Mauricio", "Maverick", "Max", "Maximilian", "Maximus", "Maxwell", "Mehdi", "Mehtab", "Mekhi", "Mel",
+                "Melvin", "Merick", "Merriwether", "Mervyn", "Methusaleh", "Micah", "Michael", "Micheal", "Mick",
+                "Mickey", "Miguel", "Mike", "Mikey", "Milan", "Miles", "Miller", "Milo", "Milton", "Misha", "Mitch",
+                "Mitchell", "Mitt", "Moe", "Mohamed", "Mohammad", "Mohammed", "Moises", "Monte", "Monty", "Morgan",
+                "Morris", "Moses", "Muhammad", "Murderous", "Murphy", "Murray", "Myles", "Myron",
+                "Nadab", "Nahaliel", "Nahath", "Nahum", "Nash", "Nasir", "Nate", "Nath", "Nathan", "Nathanael",
+                "Nathaniel", "Naveen", "Neal", "Nebuchadnezzar", "Nebuzaradan", "Ned", "Nehemiah", "Neil", "Nelson",
+                "Nesbit", "Nestor", "Neville", "Nevin", "Niall", "Nicholas", "Nick", "Nicodemas", "Nickolas",
+                "Nicky", "Nico", "Nicolas", "Nigel", "Niklaus", "Nikolai", "Nikolas", "Nile", "Nils", "Noah", "Noe",
+                "Noel", "Nolan", "Norman",
+                "Oakes", "Oakley", "Obadiah", "Obed", "Octavio", "Oisin", "Olaf", "Oli", "Oliver", "Ollie", "Olly",
+                "Omar", "Onesimus", "Oran", "Orion", "Orlando", "Oscar", "Osvaldo", "Oswald", "Otis", "Ottavio",
+                "Otto", "Ovaltine", "Owen", "Ozzie", "Ozzy",
+                "Pablo", "Paco", "Paddy", "Padraig", "Palmer", "Paolo", "Parker", "Pascal", "Pasquale", "Pat",
+                "Patty", "Patrick", "Paul", "Pavel", "Paxton", "Payson", "Payton", "Pedro", "Percy", "Perry",
+                "Petar", "Pete", "Peter", "Peyton", "Phebian", "Phil", "Philip", "Phillip", "Phineas", "Phoenix",
+                "Pierce", "Piers", "Porter", "Prakash", "Preston", "Prince",
+                "Quentin", "Quincy", "Quinlan", "Quinn", "Quinton", "Quintrell", "Quirinius",
+                "Rafael", "Rafferty", "Raheem", "Rahul", "Raiden", "Raj", "Raja", "Rajesh", "Rajiv", "Ralph", "Ram",
+                "Rameel", "Ramon", "Ramsey", "Randal", "Randall", "Randolph", "Randy", "Raphael", "Rashad", "Rashan",
+                "Rashid", "Raul", "Ravi", "Ray", "Raymond", "Reece", "Reed", "Reef", "Reese", "Reggie", "Reginald",
+                "Rehan", "Reid", "Reilly", "Remco", "Remington", "Remy", "Ren", "Rene", "Reuben", "Rex",
+                "Reynaldo", "Reza", "Rhet", "Rhett", "Rhys", "Rian", "Ricardo", "Rich", "Richard", "Richie", "Rick",
+                "Rickey", "Rickie", "Ricky", "Rico", "Rider", "Rik", "Riker", "Riley", "Ringo", "Rio", "River",
+                "Roan", "Rob", "Robbie", "Robby", "Robert", "Roberto", "Robin", "Rocco", "Rocky", "Rod", "Roderick",
+                "Rodger", "Rodney", "Rodolfo", "Rodrigo", "Rogelio", "Roger", "Rohan", "Roland", "Rolando", "Roman",
+                "Romeo", "Ron", "Ronald", "Ronaldo", "Ronan", "Ronnie", "Ronny", "Roosevelt", "Rory", "Roscoe",
+                "Ross", "Rowan", "Roy", "Royce", "Ruairi", "Ruben", "Rubin", "Rudolph", "Rudy", "Rufus",
+                "Rumpelstiltskin", "Rupert", "Russell", "Rusty", "Ryan", "Ryder", "Ryker", "Rylan", "Ryland",
+                "Ryley",
+                "Sacha", "Said", "Salazar", "Salvador", "Salvatore", "Sam", "Samir", "Sammy", "Samson", "Samuel",
+                "Samwise", "Sandeep", "Sandy", "Sanjay", "Santiago", "Santonio", "Sargeant", "Sasha", "Saul",
+                "Sawyer", "Scot", "Scott", "Scottie", "Scotty", "Scurvy", "Seamus", "Sean", "Seb", "Sebastian",
+                "Sebestian", "Sergio", "Seth", "Shadrach", "Shafi", "Shamus", "Shane", "Shannon", "Shaun", "Shawn",
+                "Shay", "Shayne", "Shea", "Sheldon", "Shelton", "Sherlock", "Sherman", "Shiloh", "Sid", "Sidney",
+                "Silas", "Simon", "Sisyphus", "Sky", "Skylar", "Skyler", "Slade", "Solomon", "Sonny", "Soren",
+                "Spencer", "Spike", "Srinivas", "Stacey", "Stacy", "Stan", "Stanley", "Starveling", "Stavros",
+                "Stefan", "Stephan", "Stephen", "Sterling", "Steve", "Steven", "Stevie", "Stewart", "Stone", "Storm",
+                "Stratton", "Stuart", "Sven", "Swaggering", "Sylvester",
+                "Tadhg", "Talon", "Tam", "Tangus", "Tanner", "Tariq", "Tarquin", "Tate", "Taylor", "Ted", "Teddy",
+                "Teo", "Terence", "Terrance", "Terrell", "Terrence", "Terry", "Tex", "Thad", "Thaddeus", "Theeling",
+                "Theo", "Theodore", "Theophilus", "Thomas", "Thor", "Tiago", "Tiberius", "Tiger", "Tim", "Timmy",
+                "Timothy", "Tito", "Titus", "Tobias", "Tobin", "Toby", "Tod", "Todd", "Tom", "Tomas", "Tommie",
+                "Tommy", "Tony", "Toryn", "Trace", "Tracey", "Tracy", "Trapezius", "Travis", "Trent", "Trenton",
+                "Trevon", "Trevor", "Trey", "Tristan", "Tristen", "Triston", "Troy", "Truman", "Tucker", "Ty",
+                "Tyler", "Tyrese", "Tyrone", "Tyson",
+                "Ulysses", "Umar", "Uriah", "Uriel", "Usama", "Uzziah", "Uzziel",
+                "Valentin", "Valentino", "Van", "Vance", "Vasco", "Vaughn", "Vernon", "Victor", "Vihan", "Vijay",
+                "Vikram", "Vince", "Vincent", "Vinnie", "Virgil", "Vishal", "Vitaliy", "Vito", "Vivian", "Vladimir",
+                "Wade", "Walker", "Wallace", "Walter", "Warren", "Waylon", "Wayne", "Wellington", "Wendell",
+                "Wesley", "Weston", "Wilbert", "Wilbur", "Wiley", "Wilfred", "Wilhelm", "Will", "Willam", "Willard",
+                "Willem", "William", "Willie", "Willis", "Wilson", "Winston", "Wolfgang", "Woody", "Wyatt",
+                "Wyndham",
+                "Xander", "Xavier", "Xerxes", "Xian",
+                "Yahir", "Yakob", "Yardley", "Yaroslav", "Yehudi", "Yestin", "Yochanan", "Yohanan", "York", "Yosef",
+                "Yuri", "Yusuf", "Yu", "Yves",
+                "Zac", "Zach", "Zacchaeus", "Zaccheus", "Zachariah", "Zachary", "Zachery", "Zack", "Zackary",
+                "Zackery", "Zadok", "Zaiden", "Zain", "Zaine", "Zak", "Zander", "Zane", "Zarephath", "Zayden",
+                "Zayn", "Zayne", "Zeb", "Zebadiah", "Zebulon", "Zechariah", "Zed", "Zedekiah", "Zeke", "Zephaniah",
+                "Zerubbabel", "Zhao", "Ziggy", "Ziklag", "Zimri", "Zion", "Zoltan", "Zophar", "Zuriel", "Zylen"
+            };
+
+            #endregion Male First Names
+
             return RandomSelect(maleNames);
         }
 
@@ -307,17 +479,18 @@ namespace EpmPersonGenerator.Classes
         public static string RandomizeUxFirstName()
         {
 
-            string[] uxNames = db.Names.Where(fn => fn.Gender == CommonStrings.gUnisex).Select(fn => fn.Value).ToArray();
+            string[] uxNames = 
+
             #region Unisex Names Array
-                //{
-                //    "Agamous", "Ainsley", "Agonous", "Ashley", "Ashton", "Aubrey", "Avery", "Bailey", "Blake", 
-                //    "Brinley", "Brogan", "Cameron", "Carter", "Casey", "Charlie", "Chartreuse", "Chaz", "Chocolate", 
-                //    "Darcy", "Deon", "Ellis", "Emerson", "Festivus", "Finical", "Frankie", "Fusty", "Ghee", "Goose", 
-                //    "Greedo", "Grimace", "Hades", "Harley", "Hayden", "Hosanna", "Jackie", "Jaden", "Jaime", 
-                //    "Jamie", "Jasper", "Jayden", "Jensen", "Kennedy", "Lynn", "Morgan", "Nahaliel", "Ovaltine", 
-                //    "Pat", "Patsy", "Patty", "Reilly", "Riley", "River", "Rene", "Robin", "Rusty", "Scurvy", 
-                //    "Taylor", "Terry", "Valkyrie", "Yowza", "Zarathustra", "Zarephath", "Zsa Zsa"
-                //};
+                {
+                    "Agamous", "Ainsley", "Agonous", "Ashley", "Ashton", "Aubrey", "Avery", "Bailey", "Blake", 
+                    "Brinley", "Brogan", "Cameron", "Carter", "Casey", "Charlie", "Chartreuse", "Chaz", "Chocolate", 
+                    "Darcy", "Deon", "Ellis", "Emerson", "Festivus", "Finical", "Frankie", "Fusty", "Ghee", "Goose", 
+                    "Greedo", "Grimace", "Hades", "Harley", "Hayden", "Hosanna", "Jackie", "Jaden", "Jaime", 
+                    "Jamie", "Jasper", "Jayden", "Jensen", "Kennedy", "Lynn", "Morgan", "Nahaliel", "Ovaltine", 
+                    "Pat", "Patsy", "Patty", "Reilly", "Riley", "River", "Rene", "Robin", "Rusty", "Scurvy", 
+                    "Taylor", "Terry", "Valkyrie", "Yowza", "Zarathustra", "Zarephath", "Zsa Zsa"
+                };
             #endregion Unisex Names Array
 
             return RandomSelect(uxNames);
@@ -330,36 +503,37 @@ namespace EpmPersonGenerator.Classes
 
         public static string RandomizeLastName()
         {
-            string[] lNames = db.Surnames.Select(sn => sn.Value).ToArray();
+            string[] lNames = 
+
             #region Surnames Array
 
-                //{
-                //    "Abderian", "Abbassian", "Abbott", "Abcede", "Abdallah", "Abdicatious", "Abercrombie", "Abnormal", "Abnormous", "Abrew", "Abrogate", "Absurd", "Accipitrine", "Accoucheur", "Acosmist", "Acouasm", "Acoucheuse", "Acrid", "Acrimonious", "Acrocephalic", "Acuff", "Adiobalist", "Aeolist", "Aflunters", "Agamous", "Agonous", "Agroof", "Alameda", "Altiloquent", "Alvarez", "Amidala", "Anonymous", "Ante-Jentacular", "Anthropoglot", "Antilles", "Applecrisp", "Apostrophe", "Arctophilist", "Armitraj", "Aurophobe", "Avaricious", "Avetrol", 
-                //    "Babaganoush", "Babblington", "Babcock", "Bacillophobe", "Bachelor", "Backgammon", "Badot", "Baffoon", "Bagatelle", "Baggins", "Bagpiper", "Baker", "Ballicatter", "Ballista", "Bandolero", "Banichek", "Barbacoa", "Barbarous", "Barbosa", "Barnes", "Barnfather", "Bearclaw", "Beelzebul", "Beitelspacher", "Bernhardt", "Bleeth", "Bono", "Boondoggle", "Bourgeois", "Bourne", "Brambleberry", "Bratislava", "Breckneck", "Brewster", "Brodax", "Brutish", "Bubbleblower", "Buttersnaps", 
-                //    "Caballero", "Cabeza", "Calaway", "Calderone", "Callowitz", "Calrissian", "Calzone", "Campalong", "Cannelloni", "Capistrano", "Carney", "Carthief", "Catastrophe", "Chasuble", "Chatterly", "Chiapet", "Chudderly", "Chupacabra", "Cityslicker", "Clandestine", "Clap Yo Handz", "Clarendon", "Clezby", "Cloverton", "Cobbler", "Cobblestone", "Coddington", "Colossal", "Comatose", "Connery", "Copperfield", "Corduroy", "Cranmer", 
-                //    "Daft", "Damsell", "Danforth", "Daugherty", "Dauncey", "Dauncey-Paunts", "De Jong", "De Vries", "Demure", "Depp", "Deville", "Dingham", "Disher", "Doddlington", "Doodah", "Doolittle", "Dowager", "Downton", "Dubrovnik", "Duckmaster", "Dubstep", "Dunderton", "Dunham", 
-                //    "Ecclesiophobe", "Eckelstein", "Ectomorphic", "Effulgent", "Einstein", "Emetophobe", "Emmentaler", "Endomorphic", "Enigmatic", "Enigmatologist", "Epstein", "Eroteme", "Erythrophobe", "Etchingham", "Etton", "Euonym", "Evanescence", "Evanescent", "Ewok", "Exiguous", "Exsibilation", "Exum", 
-                //    "Falafel", "Fallacious", "Farmboy", "Featherduster", "Feldspar", "Fennyman", "Fett", "Feversham", "Flart", "Flartington", "Flattybouch", "Flingham", "Fogalot", "Fogbottom", "Forth", "Froggenthroat", "Fudgeon", "Funkmeister", "Fustilarion", 
-                //    "Gaberlunzie", "Galeophobe", "Galligantus", "Gingersnaps", "Gingham", "Giovanni", "Giovannini", "Gleason", "Goodenuff", "Grimtalker", "Grinswide", "Grommit", "Guster", "Guttersnype", 
-                //    "Hackysack", "Hadeharia", "Haggard", "Haggersnash", "Halitosis", "Hamartiologist", "Hamirostrate", "Harmonica", "Hasenpfeffer", "Hauer", "Haversham", "Hawksworth", "Hayseed", "Heehaw", "Henshawe", "Himmelsteiger", "Hitchcock", "Hogwylde", "Hollabackatcha", "Holleratcha", "Hollerslightly", "Holmes", "Holschtein", "Hooligan", "Hopalong", "Hornblower", "Huckster", "Huderon", "Husseyfuth", "Husseyton", "Hurlyburly", "Huxtable", "Huxter",
-                //    "Iconoclast", "Illeist", "Imberbic", "Immerded", "Impecunious", "Indahouse", "In-the-Woods", 
-                //    "James", "Jeeter", "Jejunator", "Jettatore", "Jingleheimer-Schmidt", "Jones", "Jumentous",
-                //    "Kamehameha", "Karabambuchi", "Keckilpenny", "Killingsworth", "Kim", "Klebenleiber", "Klein", "Klicketyclack", "Klinker", "Knick Knack", "Knivetton", "Koesler", "Kravitz",
-                //    "Lao", "Lassiter", "Latimer", "Lee", "Leviston", "Levitz", "Litchfield", "Liverich", "Logogogue", "Lovingood", "Lucifogous", "Lucubrator", "Lumbardy", "Lychnobite",
-                //    "MacIntosh", "Maledicent", "Malmquist", "Martext", "Mayflower", "Mayelemann", "McGee", "McToc...", "Middleton", "Misarchist", "Monk", "Moody", "Mortified", "Mullarky", "Mumford", "Munroe", "Muskox", "Muzhik",
-                //    "Narcissus", "Nash", "Nickerbacher", "Nimrod", "Nurk",
-                //    "O'Malley", "O'Reilly", "Ogletree", "Overton",
-                //    "Pachyderm", "Pacifier", "Paleaceous", "Pandemic", "Pandemonium", "Paradox", "Parataxis", "Parsimonious", "Patrician", "Peacemaker", "Peacock", "Pedantic", "Pelletoot", "Pemberton", "Pennywhistle", "Peppercorn", "Perfidious", "Perilous", "Pernicious", "Perrot", "Philanthropist", "Placid", "Poepjes", "Poppycock", "Portentous", "Pottytock", "Pownder", "Pragmatic", "Precarious", "Preposterous", "Prowd", "Pterodactyl", "Pugilist", "Pugnacious", "Pungent", "Purles", "Purloiner", "Purlykat", "Pursglove", "Pyroclastic",
-                //    "Qabalah", "Quacky", "Quadratic", "Quaker", "Quarrelsome", "Quarterpownder", "Quasar", "Queenly", "Quellington", "Quetzal", "Quibble", "Quirky", "Quixote", 
-                //    "Raintree", "Rampallion", "Rejoice", "Richman", "Richmond", "Ridley", "Ringham", "Rippingham", "Robinson", "Rondeau", "Rotmensen",
-                //    "Sandoval", "Sandwalker", "Saynesberry", "Scraggleton", "Scroggs", "Scoundrel", "Scrooge", "Scullion", "Sequestered", "Shiveley", "Shivers", "Singham", "Singalong", "Singleton", "Skubalon", "Skywalker", "Sloth", "Sluggard", "Smacktalker", "Smuggins", "Snitch", "Solo", "Soupdribbler", "Spaans", "Spencer", "Stewart", "Stinkard", "Stottelmeyer", "Strangewayes", "Stubbington", "Stubby", "Swashbuckler", 
-                //    "Tang", "Teeger", "Thistleton", "Throckmorton", "Ting", "Thursty", "Toothy", "Torrington", "Torvalds", "Triumphant", "Troutslayer", "Trumpington", "Tweedy", "Tweedybyrd",
-                //    "Underhill", "Underdale", "Underton",
-                //    "Van Helsing", "Vicious", "Villainous", "Von Richtofen", 
-                //    "Wallahwallah", "Weaselchops", "Whiplash", "Whistlewhetter", "Whittlebury", "Wildebeest", "Williams", "Winebibber", "Wingham", "Wiseacre", "Witherspoon", "Wonbat", "Woodybrygg", "Woolycott", "Wormwood",
-                //    "Yamaguchi", "Yamamoto", "Yang", "Yarmulke", "Yazzie", "Yelverton", "Ying", "Yolo",
-                //    "Zamboni", "Zeldenthuis", "Zelotes"
-                //};
+                {
+                    "Abderian", "Abbassian", "Abbott", "Abcede", "Abdallah", "Abdicatious", "Abercrombie", "Abnormal", "Abnormous", "Abrew", "Abrogate", "Absurd", "Accipitrine", "Accoucheur", "Acosmist", "Acouasm", "Acoucheuse", "Acrid", "Acrimonious", "Acrocephalic", "Acuff", "Adiobalist", "Aeolist", "Aflunters", "Agamous", "Agonous", "Agroof", "Alameda", "Altiloquent", "Alvarez", "Amidala", "Anonymous", "Ante-Jentacular", "Anthropoglot", "Antilles", "Applecrisp", "Apostrophe", "Arctophilist", "Armitraj", "Aurophobe", "Avaricious", "Avetrol", 
+                    "Babaganoush", "Babblington", "Babcock", "Bacillophobe", "Bachelor", "Backgammon", "Badot", "Baffoon", "Bagatelle", "Baggins", "Bagpiper", "Baker", "Ballicatter", "Ballista", "Bandolero", "Banichek", "Barbacoa", "Barbarous", "Barbosa", "Barnes", "Barnfather", "Bearclaw", "Beelzebul", "Beitelspacher", "Bernhardt", "Bleeth", "Bono", "Boondoggle", "Bourgeois", "Bourne", "Brambleberry", "Bratislava", "Breckneck", "Brewster", "Brodax", "Brutish", "Bubbleblower", "Buttersnaps", 
+                    "Caballero", "Cabeza", "Calaway", "Calderone", "Callowitz", "Calrissian", "Calzone", "Campalong", "Cannelloni", "Capistrano", "Carney", "Carthief", "Catastrophe", "Chasuble", "Chatterly", "Chiapet", "Chudderly", "Chupacabra", "Cityslicker", "Clandestine", "Clap Yo Handz", "Clarendon", "Clezby", "Cloverton", "Cobbler", "Cobblestone", "Coddington", "Colossal", "Comatose", "Connery", "Copperfield", "Corduroy", "Cranmer", 
+                    "Daft", "Damsell", "Danforth", "Daugherty", "Dauncey", "Dauncey-Paunts", "De Jong", "De Vries", "Demure", "Depp", "Deville", "Dingham", "Disher", "Doddlington", "Doodah", "Doolittle", "Dowager", "Downton", "Dubrovnik", "Duckmaster", "Dubstep", "Dunderton", "Dunham", 
+                    "Ecclesiophobe", "Eckelstein", "Ectomorphic", "Effulgent", "Einstein", "Emetophobe", "Emmentaler", "Endomorphic", "Enigmatic", "Enigmatologist", "Epstein", "Eroteme", "Erythrophobe", "Etchingham", "Etton", "Euonym", "Evanescence", "Evanescent", "Ewok", "Exiguous", "Exsibilation", "Exum", 
+                    "Falafel", "Fallacious", "Farmboy", "Featherduster", "Feldspar", "Fennyman", "Fett", "Feversham", "Flart", "Flartington", "Flattybouch", "Flingham", "Fogalot", "Fogbottom", "Forth", "Froggenthroat", "Fudgeon", "Funkmeister", "Fustilarion", 
+                    "Gaberlunzie", "Galeophobe", "Galligantus", "Gingersnaps", "Gingham", "Giovanni", "Giovannini", "Gleason", "Goodenuff", "Grimtalker", "Grinswide", "Grommit", "Guster", "Guttersnype", 
+                    "Hackysack", "Hadeharia", "Haggard", "Haggersnash", "Halitosis", "Hamartiologist", "Hamirostrate", "Harmonica", "Hasenpfeffer", "Hauer", "Haversham", "Hawksworth", "Hayseed", "Heehaw", "Henshawe", "Himmelsteiger", "Hitchcock", "Hogwylde", "Hollabackatcha", "Holleratcha", "Hollerslightly", "Holmes", "Holschtein", "Hooligan", "Hopalong", "Hornblower", "Huckster", "Huderon", "Husseyfuth", "Husseyton", "Hurlyburly", "Huxtable", "Huxter",
+                    "Iconoclast", "Illeist", "Imberbic", "Immerded", "Impecunious", "Indahouse", "In-the-Woods", 
+                    "James", "Jeeter", "Jejunator", "Jettatore", "Jingleheimer-Schmidt", "Jones", "Jumentous",
+                    "Kamehameha", "Karabambuchi", "Keckilpenny", "Killingsworth", "Kim", "Klebenleiber", "Klein", "Klicketyclack", "Klinker", "Knick Knack", "Knivetton", "Koesler", "Kravitz",
+                    "Lao", "Lassiter", "Latimer", "Lee", "Leviston", "Levitz", "Litchfield", "Liverich", "Logogogue", "Lovingood", "Lucifogous", "Lucubrator", "Lumbardy", "Lychnobite",
+                    "MacIntosh", "Maledicent", "Malmquist", "Martext", "Mayflower", "Mayelemann", "McGee", "McToc...", "Middleton", "Misarchist", "Monk", "Moody", "Mortified", "Mullarky", "Mumford", "Munroe", "Muskox", "Muzhik",
+                    "Narcissus", "Nash", "Nickerbacher", "Nimrod", "Nurk",
+                    "O'Malley", "O'Reilly", "Ogletree", "Overton",
+                    "Pachyderm", "Pacifier", "Paleaceous", "Pandemic", "Pandemonium", "Paradox", "Parataxis", "Parsimonious", "Patrician", "Peacemaker", "Peacock", "Pedantic", "Pelletoot", "Pemberton", "Pennywhistle", "Peppercorn", "Perfidious", "Perilous", "Pernicious", "Perrot", "Philanthropist", "Placid", "Poepjes", "Poppycock", "Portentous", "Pottytock", "Pownder", "Pragmatic", "Precarious", "Preposterous", "Prowd", "Pterodactyl", "Pugilist", "Pugnacious", "Pungent", "Purles", "Purloiner", "Purlykat", "Pursglove", "Pyroclastic",
+                    "Qabalah", "Quacky", "Quadratic", "Quaker", "Quarrelsome", "Quarterpownder", "Quasar", "Queenly", "Quellington", "Quetzal", "Quibble", "Quirky", "Quixote", 
+                    "Raintree", "Rampallion", "Rejoice", "Richman", "Richmond", "Ridley", "Ringham", "Rippingham", "Robinson", "Rondeau", "Rotmensen",
+                    "Sandoval", "Sandwalker", "Saynesberry", "Scraggleton", "Scroggs", "Scoundrel", "Scrooge", "Scullion", "Sequestered", "Shiveley", "Shivers", "Singham", "Singalong", "Singleton", "Skubalon", "Skywalker", "Sloth", "Sluggard", "Smacktalker", "Smuggins", "Snitch", "Solo", "Soupdribbler", "Spaans", "Spencer", "Stewart", "Stinkard", "Stottelmeyer", "Strangewayes", "Stubbington", "Stubby", "Swashbuckler", 
+                    "Tang", "Teeger", "Thistleton", "Throckmorton", "Ting", "Thursty", "Toothy", "Torrington", "Torvalds", "Triumphant", "Troutslayer", "Trumpington", "Tweedy", "Tweedybyrd",
+                    "Underhill", "Underdale", "Underton",
+                    "Van Helsing", "Vicious", "Villainous", "Von Richtofen", 
+                    "Wallahwallah", "Weaselchops", "Whiplash", "Whistlewhetter", "Whittlebury", "Wildebeest", "Williams", "Winebibber", "Wingham", "Wiseacre", "Witherspoon", "Wonbat", "Woodybrygg", "Woolycott", "Wormwood",
+                    "Yamaguchi", "Yamamoto", "Yang", "Yarmulke", "Yazzie", "Yelverton", "Ying", "Yolo",
+                    "Zamboni", "Zeldenthuis", "Zelotes"
+                };
 
             #endregion Surnames Array
 
@@ -399,39 +573,41 @@ namespace EpmPersonGenerator.Classes
 
             string[] direction = { "North", "South", "East", "West", "N", "S", "E", "W" };
 
-            string[] street = db.Streets.Select(s => s.Value).ToArray();
+            string[] street = 
+
             #region StreetArray
-            //{
-                //    "Albatross", "Appaloosa", "Mangrove", "Pontatoc", "Cheshire", "Cardiff", "Hollywood", "Hereford",
-                //    "Kleindale", "Michigan", "Sunset", "Sunrise", "Moonlight", "Wuthering Heights", "Aspen",
-                //    "Cherry Blossom", "Orange Grove", "Midnight", "Secret Passageway", "Crankshaft", "Cloverfield",
-                //    "Moccasin", "Barracuda", "Hedgehog", "Wallaby", "Baskerville", "Pagliacci", "Valkyrie",
-                //    "Tuscaloosa", "Jimminy Cricket", "Thundercat", "Ironside", "Prometheus", "Neptune",
-                //    "Hantavirus", "Nick Nack", "Honeysuckle", "Beanblossom", "Mud Lick", "Coppersmith", "Prairie Dog",
-                //    "Crawley", "Death Trap", "Large Wooden Badger", "Holy Hand Grenade", "Camelot", "Sir Bedevere",
-                //    "Black Knight", "Lobster Trap", "Cheese Shoppe", "Bloody Peasant", "Danger", "Skullduggery",
-                //    "Coconuts", "Indefatigable", "Partisan", "Vorpal Bunny", "Rabbit of Caerbannog", "Balsamic",
-                //    "Thyme", "Rosemary", "Spangled Drongo", "Ruffed Grouse", "Lesser Prairie-Chicken",
-                //    "Arctic Loon", "Flamingo", "Himalayan Snowcock", "Wandering Albatross", "Sooty Shearwater",
-                //    "Blue-Footed Booby", "Magnificaent Frigatebird", "Great Blue Heron", "Blue-Throated Tiger Bittern",
-                //    "Snowy Egret", "White Ibis", "Black-Crowned Night Heron", "Big Year", "Harrier", "Goshawk", 
-                //    "Swallow-Tailed Kite", "Hook-Billed Kite", "Kestrel", "Klapperschlange", "Toxic Iguana",
-                //    "Rough-Legged Hawk", "Red-Footed Falcon", "Clapper Rail", "Corn Crake", "Eurasian Coot",
-                //    "Whooping Crane", "European Golden Plover", "Sandpiper", "Whimbrel", "Redshank",
-                //    "Wandering Tattler", "Jack Snipe", "Black Noddy", "Whiskered Tern", "Yellow-Bellied Sapsucker",
-                //    "Scaly-Naped Pigeon", "Snowy Owl", "Whiskered Screech Owl", "Pygmy Owl", "Lingering Lizard",
-                //    "Whip-poor-will", "Gray Nightjar", "Mango", "Eurasian Jackdaw", "Doting Donkey", "Hillbilly",
-                //    "Nutcracker", "Pinyon Jay", "Fish Crow", "Blue-Winged Warbler", "Scarlet Tanager",
-                //    "Swamp Sparrow", "Eurasian Bullfinch", "Spangled Starling", "Bearscat", "Haberdashery",
-                //    "Wistful Wolverine", "Blistering Barnacles", "Bubbling Billabong", "Tea Tree",
-                //    "Bay of Bengal", "Wild Goosechase", "Ugly Duckling", "Nursery Rhyme", "Luau", "Inspiration",
-                //    "Woolly Mammoth", "Sabertoothed Squirrel", "Scarlet Pumpernickel", "Tungsten", "Dynamite"
-            //};
+            {
+                    "Albatross", "Appaloosa", "Mangrove", "Pontatoc", "Cheshire", "Cardiff", "Hollywood", "Hereford",
+                    "Kleindale", "Michigan", "Sunset", "Sunrise", "Moonlight", "Wuthering Heights", "Aspen",
+                    "Cherry Blossom", "Orange Grove", "Midnight", "Secret Passageway", "Crankshaft", "Cloverfield",
+                    "Moccasin", "Barracuda", "Hedgehog", "Wallaby", "Baskerville", "Pagliacci", "Valkyrie",
+                    "Tuscaloosa", "Jimminy Cricket", "Thundercat", "Ironside", "Prometheus", "Neptune",
+                    "Hantavirus", "Nick Nack", "Honeysuckle", "Beanblossom", "Mud Lick", "Coppersmith", "Prairie Dog",
+                    "Crawley", "Death Trap", "Large Wooden Badger", "Holy Hand Grenade", "Camelot", "Sir Bedevere",
+                    "Black Knight", "Lobster Trap", "Cheese Shoppe", "Bloody Peasant", "Danger", "Skullduggery",
+                    "Coconuts", "Indefatigable", "Partisan", "Vorpal Bunny", "Rabbit of Caerbannog", "Balsamic",
+                    "Thyme", "Rosemary", "Spangled Drongo", "Ruffed Grouse", "Lesser Prairie-Chicken",
+                    "Arctic Loon", "Flamingo", "Himalayan Snowcock", "Wandering Albatross", "Sooty Shearwater",
+                    "Blue-Footed Booby", "Magnificaent Frigatebird", "Great Blue Heron", "Blue-Throated Tiger Bittern",
+                    "Snowy Egret", "White Ibis", "Black-Crowned Night Heron", "Big Year", "Harrier", "Goshawk", 
+                    "Swallow-Tailed Kite", "Hook-Billed Kite", "Kestrel", "Klapperschlange", "Toxic Iguana",
+                    "Rough-Legged Hawk", "Red-Footed Falcon", "Clapper Rail", "Corn Crake", "Eurasian Coot",
+                    "Whooping Crane", "European Golden Plover", "Sandpiper", "Whimbrel", "Redshank",
+                    "Wandering Tattler", "Jack Snipe", "Black Noddy", "Whiskered Tern", "Yellow-Bellied Sapsucker",
+                    "Scaly-Naped Pigeon", "Snowy Owl", "Whiskered Screech Owl", "Pygmy Owl", "Lingering Lizard",
+                    "Whip-poor-will", "Gray Nightjar", "Mango", "Eurasian Jackdaw", "Doting Donkey", "Hillbilly",
+                    "Nutcracker", "Pinyon Jay", "Fish Crow", "Blue-Winged Warbler", "Scarlet Tanager",
+                    "Swamp Sparrow", "Eurasian Bullfinch", "Spangled Starling", "Bearscat", "Haberdashery",
+                    "Wistful Wolverine", "Blistering Barnacles", "Bubbling Billabong", "Tea Tree",
+                    "Bay of Bengal", "Wild Goosechase", "Ugly Duckling", "Nursery Rhyme", "Luau", "Inspiration",
+                    "Woolly Mammoth", "Sabertoothed Squirrel", "Scarlet Pumpernickel", "Tungsten", "Dynamite"
+            };
             #endregion StreetArray
 
-            string[] format = db.StreetSuffixes.Select(ss => ss.Value).ToArray();
+            string[] format = 
+
             #region StreetSuffixArray
-            //{ "Ave", "Avenue", "Rd", "Road", "St", "Street", "Blvd", "Boulevard", "Way", "Trl", "Trail", "Cir", "Circle", "Pl", "Place", "Tpke", "Turnpike", "Ct", "Court", "Dr", "Drive", "Expy", "Expressway", "Route", "Rte", "Freeway", "Fwy", "Junction", "Jct", "Lane", "Ln", "Pkwy", "Parkway", "Stra", "Stravenue" };
+            { "Ave", "Avenue", "Rd", "Road", "St", "Street", "Blvd", "Boulevard", "Way", "Trl", "Trail", "Cir", "Circle", "Pl", "Place", "Tpke", "Turnpike", "Ct", "Court", "Dr", "Drive", "Expy", "Expressway", "Route", "Rte", "Freeway", "Fwy", "Junction", "Jct", "Lane", "Ln", "Pkwy", "Parkway", "Stra", "Stravenue" };
             #endregion StreetSuffixArray
 
             #endregion Directions, Streets, and Type Formats
@@ -443,69 +619,70 @@ namespace EpmPersonGenerator.Classes
         #region City
         public static string RandomizeCity()
         {
-            string[] cities = db.Cities.Select(c => c.Value).ToArray();
+            string[] cities = 
+
                 #region Cities Array
-                //{
-                //    // Abbey, Alp(s), Angle, Apex, Arch(es), Ascent
-                //    "Abandoned Archipelago", "Abilene", "Albany", "Astoria", "Athens", "Aurora", "Austin", "Avondale",
-                //    // Badlands, Base, Basin, Bay, Beach, Bend, Bight, Bluff, Bog, Bolson, Bridge, Brook, Brow, Bulge, Butte
-                //    "Badger Bend", "Badgerville", "Bagdad", "Banff", "Bangkok", "Banker's Basin", "Banshee Springs", "Batholith Basin", "Battle Creek", "Bauxite",
-                //    "Beartrap Bluff", "Beaumont", "Bedrock", "Belgravia", "Berlin", "Bickering Butte", "Billings", "Biotite Bight", "Birmingham", "Black Basin",
-                //    "Blackpool", "Bloomingdale", "Bloomington", "Bodacious Badlands", "Bolson", "Boomerang Bluff", "Boondoggle Bog", "Boring", "Boulder", 
-                //    "Brambleberry", "Bramblebush", "Bruges", "Bumblebee", "Buxton",
-                //    // Camp, Canal, Canyon, Cape, Castle, Cathedral, Cave, Center, Centre, Chaparral, Church, Circle, Cistern, City, Cleft, Cliff, College, Corner, Crag, Crater, Crease, Creek, Crest, Crinkle, Crock, Croft, Crook, Curve
-                //    "Cackling Cauldron", "Calamine", "Calamity Cliffs", "Calamity Creek", "Calcite", "Caldera Cauldron", "Caldera Creek", "Caliche Creek", "Capernaum",
-                //    "Cape Cretaceous", "Capitol Reef", "Carbonite Cauldron", "Carnivore Canyon", "Castleton", "Chalcedon", "Chalky Chaparral", "Chelmsford", "Chesterfield", "Chichester",
-                //    "Chico", "Chinle", "Clifton", "Colchecter", "Cowboy's Clutch", "Crackerville", "Crater Creek", "Creepy Hollow", "Cretaceous Cliff", 
-                //    "Cretaceous Creek", "Croydon", "Crumbling Crock",
-                //    // Dam, Delta, Divide, Dome, Drift, Dune(s), Dyke
-                //    "Davidic Drift", "Delirium Dunes", "Deposition Delta", "Deposition Dunes", "Desert Doldrums", "Destitute Divide", "Devon", "Dodge City", "Dory's Duldrums", "Dover",
-                //    "Downton", 
-                //    // Eddy, Elevation, Esker, Estuary
-                //    "Eccentric Eddy", "Edelweiss Estuary", "Encino", "Eureka", 
-                //    // Falls, Farm, Fault, Fen, Fjord, Floodplain, Fold, Fork, Fort, Fountain, Funnel, Furrow
-                //    "Fishbarrel", "Floodplains", "Fraggle Rock", 
-                //    // Gallery, Gap, Garden(s), Gate, Gradient, Groove, Grove
-                //    "Glacier Springs", "Gloucester", "Golgotha", "Gotham City", "Grasshopper Grove", "Gypsy Camp",
-                //    // Hamlet, Harbour, Heading, Headland(s), Heap, Height(s), Highland(s), Hill(s), Hillside, Hilltop, Hook, Horn, House, Hummock
-                //    "Hambone Headlands", "Happy Acres", "Happy Valley", "Hartford", "Hazard Hills", "Hazzard", "Hermits Rest", "Hicksville", "Hijinx Hills",
-                //    "Holland's Landing", "Hoolihan's Hamlet", "Horrific Hamlet", "Houston", "Huddleston",
-                //    // Ice Cave(s), Igloo, Incline, Island
-                //    "Incinerator Springs", "Inferno Canyon", 
-                //    // Joist, Juggernaut
-                //    "Jefferson", "Jerome",
-                //    // Kettle, Knoll
-                //    "Kaibeto", "Kayenta", "Kickapoo", "Kingston",
-                //    // Lagoon, Lake, Lean, Lee, Line, Loop
-                //    "Landslide", "Limedale", "Lincoln", "Loafer Springs",
-                //    // Memorial, Mesa, Mill, Monument, Moraine, Mound, Mount, Mountain
-                //    "Madras", "Madrid", "Manchester", "Maranatha", "Mayberry", "Metropolis", "Miami", "Milford", "Milwaukee", "Monkey's Eyebrow", "Moscow", 
-                //    "Mosquitoville", "Munson", "Murietta",
-                //    // N
-                //    "Naples", "New Hampton", "Newhaven", "Newmarket", "Noodleville", "Nut Plantation",
-                //    // Obelisk
-                //    "Oakland", "Oberlin", "Oceanside", "Odessa", "Ogletree", "Ontario", "Orangevale", "Oro Valley", "Oxbow", "Oxford", "Oxnard",
-                //    // Palace, Parapet, Park, Pass, Peak(s), Pinnacle, Pitch, Plain, Plateau, Pond, Prairie, Precipice, Priory, Pyramid
-                //    "Patagonia", "Peach Tree", "Peekaboo Prairie", "Peoria", "Pitchfork", "Prague", "Prince Rupert", "Promontory", "Pumpkin Patch",
-                //    // Ranch, Range, Reach, Reef, Reserve, Reservior, Ridge, Rill, Rift, Rimple, Rise, Rivel, River, Rivulet, Rock, Round, Ruck, Ruins, Runoff
-                //    "Ragnar's Rivulet", "Rattlesnake Bend", "Reading", "Redding", "Red River Valley", "Riddick's Rill",
-                //    // Sag, Sands, Sea, Seam, Shift, Shore, Sill, Silurian, Sinkhole, Slope, Slump, Spine, Squall, Square, Station, Statue, Stream, Strip, Summit
-                //    "San Antonio", "San Diego", "San Fernando", "San Gabriel", "Santa Barbara", "Santa Cruz", "Scary Woods", "Sewer City", "Sierra Vista",
-                //    "Silly City", "Silver Spur", "Sleepy Hollow", "Slick Rock", "Smallville", "Square Butte", "Squatterville", "Squatting Peaks", "Steamboat",
-                //    "St. Augustine", "St. Crispin", "St. David", "St. George", "St. Jerome", "St. John", "St. Justin", "St. Michael", "St. Stephen", "St. Thomas",
-                //    // Tack, Talus, Temple, Tilt, Tomb, Tower, Triassic, Trough, Turn
-                //    "Temecula", "Tigerlilly", "Tillamook", "Tomahawk", "Trinidad", "Tucson", "Tulip Town", "Turkey Vulture Terrace", "Twin Falls",
-                //    // Upland
-                //    "Utica", "Ulysses Upland",
-                //    // Valley, Veer, Volcano
-                //    "Vacuum Valley", "Valhalla", "Venice", "Ventura", "Very Unlikely", "Vortex Valley",
-                //    // Wall, Wash, Waterfall, Weave, Wetland, Wheel, Woodland, Wrinkle
-                //    "Weaver's Wash", "Westminster", "Whimsical Wash", "Whitehorse", "Winnipeg", "Winston's Wetland", "Woodland Park", "Wyatt's Wash",
-                //    // Yardang, Yaw
-                //    "Yarmouth", "Youngstown",
-                //    // Zenith, Zigzag
-                //    "Zeus' Zenith", "Ziklag"
-                //};
+                {
+                    // Abbey, Alp(s), Angle, Apex, Arch(es), Ascent
+                    "Abandoned Archipelago", "Abilene", "Albany", "Astoria", "Athens", "Aurora", "Austin", "Avondale",
+                    // Badlands, Base, Basin, Bay, Beach, Bend, Bight, Bluff, Bog, Bolson, Bridge, Brook, Brow, Bulge, Butte
+                    "Badger Bend", "Badgerville", "Bagdad", "Banff", "Bangkok", "Banker's Basin", "Banshee Springs", "Batholith Basin", "Battle Creek", "Bauxite",
+                    "Beartrap Bluff", "Beaumont", "Bedrock", "Belgravia", "Berlin", "Bickering Butte", "Billings", "Biotite Bight", "Birmingham", "Black Basin",
+                    "Blackpool", "Bloomingdale", "Bloomington", "Bodacious Badlands", "Bolson", "Boomerang Bluff", "Boondoggle Bog", "Boring", "Boulder", 
+                    "Brambleberry", "Bramblebush", "Bruges", "Bumblebee", "Buxton",
+                    // Camp, Canal, Canyon, Cape, Castle, Cathedral, Cave, Center, Centre, Chaparral, Church, Circle, Cistern, City, Cleft, Cliff, College, Corner, Crag, Crater, Crease, Creek, Crest, Crinkle, Crock, Croft, Crook, Curve
+                    "Cackling Cauldron", "Calamine", "Calamity Cliffs", "Calamity Creek", "Calcite", "Caldera Cauldron", "Caldera Creek", "Caliche Creek", "Capernaum",
+                    "Cape Cretaceous", "Capitol Reef", "Carbonite Cauldron", "Carnivore Canyon", "Castleton", "Chalcedon", "Chalky Chaparral", "Chelmsford", "Chesterfield", "Chichester",
+                    "Chico", "Chinle", "Clifton", "Colchecter", "Cowboy's Clutch", "Crackerville", "Crater Creek", "Creepy Hollow", "Cretaceous Cliff", 
+                    "Cretaceous Creek", "Croydon", "Crumbling Crock",
+                    // Dam, Delta, Divide, Dome, Drift, Dune(s), Dyke
+                    "Davidic Drift", "Delirium Dunes", "Deposition Delta", "Deposition Dunes", "Desert Doldrums", "Destitute Divide", "Devon", "Dodge City", "Dory's Duldrums", "Dover",
+                    "Downton", 
+                    // Eddy, Elevation, Esker, Estuary
+                    "Eccentric Eddy", "Edelweiss Estuary", "Encino", "Eureka", 
+                    // Falls, Farm, Fault, Fen, Fjord, Floodplain, Fold, Fork, Fort, Fountain, Funnel, Furrow
+                    "Fishbarrel", "Floodplains", "Fraggle Rock", 
+                    // Gallery, Gap, Garden(s), Gate, Gradient, Groove, Grove
+                    "Glacier Springs", "Gloucester", "Golgotha", "Gotham City", "Grasshopper Grove", "Gypsy Camp",
+                    // Hamlet, Harbour, Heading, Headland(s), Heap, Height(s), Highland(s), Hill(s), Hillside, Hilltop, Hook, Horn, House, Hummock
+                    "Hambone Headlands", "Happy Acres", "Happy Valley", "Hartford", "Hazard Hills", "Hazzard", "Hermits Rest", "Hicksville", "Hijinx Hills",
+                    "Holland's Landing", "Hoolihan's Hamlet", "Horrific Hamlet", "Houston", "Huddleston",
+                    // Ice Cave(s), Igloo, Incline, Island
+                    "Incinerator Springs", "Inferno Canyon", 
+                    // Joist, Juggernaut
+                    "Jefferson", "Jerome",
+                    // Kettle, Knoll
+                    "Kaibeto", "Kayenta", "Kickapoo", "Kingston",
+                    // Lagoon, Lake, Lean, Lee, Line, Loop
+                    "Landslide", "Limedale", "Lincoln", "Loafer Springs",
+                    // Memorial, Mesa, Mill, Monument, Moraine, Mound, Mount, Mountain
+                    "Madras", "Madrid", "Manchester", "Maranatha", "Mayberry", "Metropolis", "Miami", "Milford", "Milwaukee", "Monkey's Eyebrow", "Moscow", 
+                    "Mosquitoville", "Munson", "Murietta",
+                    // N
+                    "Naples", "New Hampton", "Newhaven", "Newmarket", "Noodleville", "Nut Plantation",
+                    // Obelisk
+                    "Oakland", "Oberlin", "Oceanside", "Odessa", "Ogletree", "Ontario", "Orangevale", "Oro Valley", "Oxbow", "Oxford", "Oxnard",
+                    // Palace, Parapet, Park, Pass, Peak(s), Pinnacle, Pitch, Plain, Plateau, Pond, Prairie, Precipice, Priory, Pyramid
+                    "Patagonia", "Peach Tree", "Peekaboo Prairie", "Peoria", "Pitchfork", "Prague", "Prince Rupert", "Promontory", "Pumpkin Patch",
+                    // Ranch, Range, Reach, Reef, Reserve, Reservior, Ridge, Rill, Rift, Rimple, Rise, Rivel, River, Rivulet, Rock, Round, Ruck, Ruins, Runoff
+                    "Ragnar's Rivulet", "Rattlesnake Bend", "Reading", "Redding", "Red River Valley", "Riddick's Rill",
+                    // Sag, Sands, Sea, Seam, Shift, Shore, Sill, Silurian, Sinkhole, Slope, Slump, Spine, Squall, Square, Station, Statue, Stream, Strip, Summit
+                    "San Antonio", "San Diego", "San Fernando", "San Gabriel", "Santa Barbara", "Santa Cruz", "Scary Woods", "Sewer City", "Sierra Vista",
+                    "Silly City", "Silver Spur", "Sleepy Hollow", "Slick Rock", "Smallville", "Square Butte", "Squatterville", "Squatting Peaks", "Steamboat",
+                    "St. Augustine", "St. Crispin", "St. David", "St. George", "St. Jerome", "St. John", "St. Justin", "St. Michael", "St. Stephen", "St. Thomas",
+                    // Tack, Talus, Temple, Tilt, Tomb, Tower, Triassic, Trough, Turn
+                    "Temecula", "Tigerlilly", "Tillamook", "Tomahawk", "Trinidad", "Tucson", "Tulip Town", "Turkey Vulture Terrace", "Twin Falls",
+                    // Upland
+                    "Utica", "Ulysses Upland",
+                    // Valley, Veer, Volcano
+                    "Vacuum Valley", "Valhalla", "Venice", "Ventura", "Very Unlikely", "Vortex Valley",
+                    // Wall, Wash, Waterfall, Weave, Wetland, Wheel, Woodland, Wrinkle
+                    "Weaver's Wash", "Westminster", "Whimsical Wash", "Whitehorse", "Winnipeg", "Winston's Wetland", "Woodland Park", "Wyatt's Wash",
+                    // Yardang, Yaw
+                    "Yarmouth", "Youngstown",
+                    // Zenith, Zigzag
+                    "Zeus' Zenith", "Ziklag"
+                };
 
             #endregion Cities Array
 
@@ -514,62 +691,70 @@ namespace EpmPersonGenerator.Classes
 
         public static string FabricateCityName()
         {
-            string[] Modifier = db.CityModifiers.Select(cm => cm.Value).ToArray();
+            string[] CityModifier =
 
-            string[] Substantive = db.CityNames.Select(cn => cn.Value).ToArray();
+            #region City Modifier Array
+
+                { "Putrid", "Ribald", "Bedazzled", "Bamboozled", "Elevated", "Tousled", "Bombastic", "Bludgeoned", "Royal", "Ravaged", "Rocky", "Rampant" };
+
+            #endregion City Modifier Array
+
+            string[] Substantive = 
+
                 #region SubstantiveArray
-                //{
-                //    "Abbey", "Alp", "Alps", "Angle", "Apex", "Arch", "Arches", "Ascent",
-                //    "Badlands", "Backwoods", "Base", "Basin", "Bay", "Beach", "Bend", "Bight", "Bluff", "Bog", "Bolson",
-                //    "Boondocks", "Bridge", "Brook", "Brow", "Bulge", "Bush", "Butte",
-                //    "Camp", "Canal", "Canyon", "Cape", "Castle", "Cathedral", "Cave", "Center", "Centre", "Chaparral",
-                //    "Church", "Circle", "Cistern", "City", "Cleft", "Cliff", "Creek", "Crescent",
-                //    "Dam", "Delta", "Divide", "Dome", "Drift", "Duldrums", "Dune", "Dunes", "Dyke",
-                //    "Eddy", "Elevation", "Enclosure", "Esker", "Estuary",
-                //    "Falls", "Farm", "Fault", "Fen", "Field", "Fjord", "Floodplain", "Fold", "Forest", "Fork", "Fort",
-                //    "Fountain", "Frying Pan", "Funnel", "Furrow",
-                //    "Gallery", "Gap", "Garden", "Gardens", "Gate", "Gradient", "Green", "Groove", "Grove",
-                //    "Hamlet", "Harbour", "Heading", "Headland", "Headlands", "Heap", "Heath", "Height", "Heights",
-                //    "Highland", "Highlands", "Hill", "Hills", "Hillside", "Hilltop", "Hinterland", "Hollow", "Hook",
-                //    "Horn", "House", "Hummock",
-                //    "Ice Cave", "Ice Caves", "Igloo", "Incline", "Island", "Isthmus",
-                //    "Jackpot", "Jail", "Jetty", "Jog", "Joint", "Joola", "Joust", "Jump", "Jungle",
-                //    "Keel", "Keep", "Kettle", "Key", "Kiln", "Kingdom", "Kitchen", "Knee", "Knoll", "Knot",
-                //    "Lagoon", "Lake", "Lea", "Lean", "Lee", "Line", "Look", "Loop", "Lowland",
-                //    "Meadow", "Memorial", "Mesa", "Melting Pot", "Mill", "Mission", "Moat", "Molehill", "Monument",
-                //    "Moorland", "Moraine", "Mound", "Mount", "Mountain", "Mud-puddle",
-                //    "Neck", "Needle", "Nest", "Nexus", "Nose", "Nook", "Niche", "Nub",
-                //    "Oak", "Obelisk", "Oceanside", "Orchard", "Outback", "Overlook",
-                //    "Palace", "Parapet", "Park", "Pass", "Pasture", "Patch", "Peak", "Peaks", "Pinnacle", "Pitch",
-                //    "Plain", "Plantation", "Plateau", "Plot", "Pond", "Prairie", "Precipice", "Priory", "Pyramid",
-                //    "Quarrel", "Quadrant", "Quarter", "Quay", "Quagmire", "Queue",
-                //    "Ranch", "Range", "Reach", "Reef", "Reserve", "Reservior", "Ridge", "Rill", "Rift", "Rimple", "Rise"
-                //    , "Rivel", "River", "Rivulet", "Rock", "Round", "Ruck",
-                //    "Sag", "Sands", "Savanna", "Sea", "Seam", "Shift", "Shore", "Sieve", "Sill", "Sinkhole", "Slope",
-                //    "Slump", "Spatula", "Spine", "Squall", "Square", "Station", "Statue", "Steppe", "Stream", "Strip",
-                //    "Summit", "Swamp",
-                //    "Tack", "Talus", "Temple", "Thicket", "Tilt", "Tomb", "Tower", "Trail", "Trough", "Turn",
-                //    "Upland", "Uplands", "U-turn",
-                //    "Valley", "Veer", "Veldt", "Vineyard", "Volcano", "Vestibule",
-                //    "Wall", "Wash", "Waterfall", "Weave", "Wetland", "Wheel", "Wood", "Woodland", "Wrinkle",
-                //    "Yardang", "Yaw",
-                //    "Zenith", "Zigzag"
-                //};
+                {
+                    "Abbey", "Alp", "Alps", "Angle", "Apex", "Arch", "Arches", "Ascent",
+                    "Badlands", "Backwoods", "Base", "Basin", "Bay", "Beach", "Bend", "Bight", "Bluff", "Bog", "Bolson",
+                    "Boondocks", "Bridge", "Brook", "Brow", "Bulge", "Bush", "Butte",
+                    "Camp", "Canal", "Canyon", "Cape", "Castle", "Cathedral", "Cave", "Center", "Centre", "Chaparral",
+                    "Church", "Circle", "Cistern", "City", "Cleft", "Cliff", "Creek", "Crescent",
+                    "Dam", "Delta", "Divide", "Dome", "Drift", "Duldrums", "Dune", "Dunes", "Dyke",
+                    "Eddy", "Elevation", "Enclosure", "Esker", "Estuary",
+                    "Falls", "Farm", "Fault", "Fen", "Field", "Fjord", "Floodplain", "Fold", "Forest", "Fork", "Fort",
+                    "Fountain", "Frying Pan", "Funnel", "Furrow",
+                    "Gallery", "Gap", "Garden", "Gardens", "Gate", "Gradient", "Green", "Groove", "Grove",
+                    "Hamlet", "Harbour", "Heading", "Headland", "Headlands", "Heap", "Heath", "Height", "Heights",
+                    "Highland", "Highlands", "Hill", "Hills", "Hillside", "Hilltop", "Hinterland", "Hollow", "Hook",
+                    "Horn", "House", "Hummock",
+                    "Ice Cave", "Ice Caves", "Igloo", "Incline", "Island", "Isthmus",
+                    "Jackpot", "Jail", "Jetty", "Jog", "Joint", "Joola", "Joust", "Jump", "Jungle",
+                    "Keel", "Keep", "Kettle", "Key", "Kiln", "Kingdom", "Kitchen", "Knee", "Knoll", "Knot",
+                    "Lagoon", "Lake", "Lea", "Lean", "Lee", "Line", "Look", "Loop", "Lowland",
+                    "Meadow", "Memorial", "Mesa", "Melting Pot", "Mill", "Mission", "Moat", "Molehill", "Monument",
+                    "Moorland", "Moraine", "Mound", "Mount", "Mountain", "Mud-puddle",
+                    "Neck", "Needle", "Nest", "Nexus", "Nose", "Nook", "Niche", "Nub",
+                    "Oak", "Obelisk", "Oceanside", "Orchard", "Outback", "Overlook",
+                    "Palace", "Parapet", "Park", "Pass", "Pasture", "Patch", "Peak", "Peaks", "Pinnacle", "Pitch",
+                    "Plain", "Plantation", "Plateau", "Plot", "Pond", "Prairie", "Precipice", "Priory", "Pyramid",
+                    "Quarrel", "Quadrant", "Quarter", "Quay", "Quagmire", "Queue",
+                    "Ranch", "Range", "Reach", "Reef", "Reserve", "Reservior", "Ridge", "Rill", "Rift", "Rimple", "Rise"
+                    , "Rivel", "River", "Rivulet", "Rock", "Round", "Ruck",
+                    "Sag", "Sands", "Savanna", "Sea", "Seam", "Shift", "Shore", "Sieve", "Sill", "Sinkhole", "Slope",
+                    "Slump", "Spatula", "Spine", "Squall", "Square", "Station", "Statue", "Steppe", "Stream", "Strip",
+                    "Summit", "Swamp",
+                    "Tack", "Talus", "Temple", "Thicket", "Tilt", "Tomb", "Tower", "Trail", "Trough", "Turn",
+                    "Upland", "Uplands", "U-turn",
+                    "Valley", "Veer", "Veldt", "Vineyard", "Volcano", "Vestibule",
+                    "Wall", "Wash", "Waterfall", "Weave", "Wetland", "Wheel", "Wood", "Woodland", "Wrinkle",
+                    "Yardang", "Yaw",
+                    "Zenith", "Zigzag"
+                };
                 #endregion SubstantiveArray
 
-            return RandomSelect(Modifier) + " " + RandomSelect(Substantive);
+            return RandomSelect(CityModifier) + " " + RandomSelect(Substantive);
         }
         #endregion City
 
         #region State
         public static string RandomizeState()
         {
-            string[] states = db.States.Select(s => s.Name).ToArray();
+            string[] states = 
+
                 #region States Array
-                //{
-                //    "AA","AE","AK","AL","AP","AR","AS","AZ","CA","CO","CT","DC","DE","FL","GA","GU","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MP","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","PR","RI","SC","SD","TN","TX","UT","VA","VI","VT","WA","WI","WV","WY"
-                //};
-            #endregion States Array
+                {
+                    "AA","AE","AK","AL","AP","AR","AS","AZ","CA","CO","CT","DC","DE","FL","GA","GU","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MP","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","PR","RI","SC","SD","TN","TX","UT","VA","VI","VT","WA","WI","WV","WY"
+                };
+                #endregion States Array
 
             return RandomSelect(states);
         }
@@ -1039,6 +1224,11 @@ namespace EpmPersonGenerator.Classes
         public int Next(int maxValue)
         {
             return Next(0, maxValue);
+        }
+
+        public override void GetNonZeroBytes(byte[] data)
+        {
+            _r.GetNonZeroBytes(data);
         }
     }
 
